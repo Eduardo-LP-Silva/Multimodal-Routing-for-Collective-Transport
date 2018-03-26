@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
-#include "Funcs.h"
+
 #include "Interface.h"
 
 using namespace std;
 
-void RouteMenu()
+void RouteMenu()	
 {
 	int opt = 0;
 
@@ -13,11 +13,13 @@ void RouteMenu()
 
 	while (opt != 2)
 	{
-		cout << "+--------------------+\n"
-			<< "| 1 - Calculate Rout |\n"
-			<< "+--------------------+\n"
-			<< "| 2 - Exit           |\n"
-			<< "+--------------------+\n" << endl;
+		cout << "+------------------------------+\n"
+			<< "| Collective Transport Routing |\n"
+			<< "+------------------------------+\n"
+			<< "| 1 - Calculate Rout           |\n"
+			<< "+------------------------------+\n"
+			<< "| 2 - Exit                     |\n"
+			<< "+------------------------------+\n" << endl;
 
 		cin >> opt;
 
@@ -40,10 +42,13 @@ void CalcRouteMenu()
 	int opt = 0;
 	string origin, destination;
 
+	cin.clear();
+	cin.ignore(1000, '\n');
+
 	cout << "Origin: ";
 	getline(cin, origin);
-	cout << endl;
-	cout << endl << "Destination: ";
+	
+	cout << endl << endl << "Destination: ";
 	getline(cin, destination);
 
 	while (opt != 3)

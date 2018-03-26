@@ -1,11 +1,13 @@
-#ifndef GPSCoord_H
-#define GPSCoord_H
+#ifndef GPSCOORD_H
+#define GPSCOORD_H
 
 #include <iostream>
 #include <exception>
 
 class GPSCoord
 {
+private:
+
 	double latitude;
 	double longitude;
 	double altitude;
@@ -18,5 +20,6 @@ public:
 	double getLongitude();
 	double getAltitude();
 	bool operator==(GPSCoord  &gps) const;
-
 };
+
+#endif

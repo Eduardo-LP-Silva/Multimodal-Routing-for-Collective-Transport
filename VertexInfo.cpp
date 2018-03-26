@@ -4,45 +4,42 @@
 
 using namespace std;
 
-VertexInfo::VertexInfo()
-{
-
-}
+VertexInfo::VertexInfo(){}
 
 VertexInfo::VertexInfo(string n, GPSCoord g, int id)
 {
-	this.name = n;
-	this.gps = g;
-	this.ID = id;
+	name = n;
+	gps = g;
+	ID = id;
 }
 
 string VertexInfo::getName()
 {
-	return this.name;
+	return name;
 }
 
 GPSCoord VertexInfo::getGPSCoord()
 {
-	return this.gps;
+	return gps;
 }
 
 int VertexInfo::getID()
 {
-	return this.ID;
+	return ID;
 }
 
 void VertexInfo::setName(string n)
 {
-	this.name = n;
+	name = n;
 }
 
 void VertexInfo::setGPS(GPSCoord g)
 {
-    this.gps = gps;
+    gps = g;
 }
 
 void VertexInfo::setID(int id)
 {
-	this.ID = id;
+	ID = id;
 }
 

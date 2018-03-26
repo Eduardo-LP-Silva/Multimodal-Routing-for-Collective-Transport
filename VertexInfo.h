@@ -2,12 +2,12 @@
 #include <string>
 #include "Funcs.h"
 #include "Interface.h"
-#include "GPS.h"
-
-using namespace std;
+#include "GPSCoord.h"
 
 class VertexInfo
 {
+private:
+
 	string name;
 	GPSCoord gps;
 	int ID;

@@ -11,6 +11,7 @@ private:
 
 	Vertex * dest;      // destination vertex
 	double weight;         // edge weight
+	double time;
 	Info info;
 
 public:
@@ -18,6 +19,7 @@ public:
 	Edge(Vertex *d, double w, Info i);
 	double getWeight() const;
 	Vertex* getDest() const;
+	double getTime() const;
 };
 
 #endif

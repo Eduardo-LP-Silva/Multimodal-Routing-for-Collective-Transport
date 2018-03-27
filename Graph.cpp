@@ -44,10 +44,14 @@ bool Graph::addVertex(const GPSCoord c, const int ID)
 * Returns true if successful, and false if the source or destination vertex does not exist.
 */
 
-bool Graph::addEdge(const int &IDsourc, const int &IDdest, double w, Info I)
+bool Graph::addEdge(const int &IDsourc, const int &IDdest, Info I, double w = 1)
 {
 	auto v1 = findVertex(IDsourc);
 	auto v2 = findVertex(IDdest);
+
+	if(w != 1)
+		w = sqrt(pow(v1->getCoords().getLatitude() - v2->getCoords().getLatitude(), 2)
+			+ pow(v1->getCoords().getLongitude() - v2->getCoords().getLongitude(), 2));
 
 	if (v1 == NULL || v2 == NULL)
 		return false;
@@ -87,6 +91,48 @@ void Graph::dijkstraShortestPath(const int &IDorigin)
 			if (e.getDest()->getDist() > v2->getDist() + e.getWeight())
 			{
 				e.getDest()->setDist(v2->getDist() + e.getWeight());
+				e.getDest()->setPath(v2);
+
+				if (!e.getDest()->isProcessing())
+				{
+					e.getDest()->setProcessing(true);
+					qe.insert(e.getDest());
+				}
+				else
+					qe.decreaseKey(e.getDest());
+			}
+		}
+	}
+}
+
+void Graph::dijkstraShortestTime(const int &IDorigin)
+{
+	MutablePriorityQueue<Vertex> qe;
+	Vertex *v2;
+
+	for (unsigned int i = 0; i < vertexSet.size(); i++)
+	{
+		if (vertexSet.at(i)->getId() == IDorigin)
+		{
+			vertexSet.at(i)->setDist(0);
+			qe.insert(vertexSet.at(i));
+		}
+		else
+			vertexSet.at(i)->setDist(INF);
+
+		vertexSet.at(i)->setPath(NULL);
+	}
+
+	while (!qe.empty())
+	{
+		v2 = qe.extractMin();
+		v2->setProcessing(false);
+
+		for (Edge e : v2->getAdj())
+		{
+			if (e.getDest()->getDist() > v2->getDist() + e.getTime())
+			{
+				e.getDest()->setDist(v2->getDist() + e.getTime());
 				e.getDest()->setPath(v2);
 
 				if (!e.getDest()->isProcessing())

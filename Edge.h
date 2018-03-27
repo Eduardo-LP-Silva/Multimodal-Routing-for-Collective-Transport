@@ -3,32 +3,21 @@
 
 #include "Info.h"
 
-template <class Vertex> class Vertex;
+class Vertex;
 
-template <class T>
 class Edge
 {
 private:
 
-	Vertex<T> * dest;      // destination vertex
+	Vertex * dest;      // destination vertex
 	double weight;         // edge weight
 	Info info;
 
 public:
 
-	Edge(Vertex<T> *d, double w);
-	Edge(Vertex<T> *d, double w, Info i);
+	Edge(Vertex *d, double w, Info i);
+	double getWeight() const;
+	Vertex* getDest() const;
 };
-
-template <class T>
-Edge<T>::Edge(Vertex<T> *d, double w) : dest(d), weight(w) {}
-
-template <class T>
-Edge<T>::Edge(Vertex<T> *d, double w, Info i)
-{
-	dest = d;
-	weight = w;
-	info = i;
-}
 
 #endif

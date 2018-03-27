@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Interface::Interface(Graph<Vertex<GPSCoord>> g)
+Interface::Interface(Graph g)
 {
 	graph = g;
 }

@@ -10,11 +10,11 @@ class Interface
 {
 private:
 
-	Graph<Vertex<GPSCoord>> graph;
+	Graph graph;
 
 public:
 	
-	Interface(Graph<Vertex<GPSCoord>> g);
+	Interface(Graph g);
 	void CalcRouteMenu();
 	void RouteMenu();
 };

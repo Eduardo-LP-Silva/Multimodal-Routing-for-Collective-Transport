@@ -1,11 +1,13 @@
-#include <iostream>
-#include <string>
-
 #include "Interface.h"
 
 using namespace std;
 
-void RouteMenu()	
+Interface::Interface(Graph<Vertex<GPSCoord>> g)
+{
+	graph = g;
+}
+
+void Interface::RouteMenu()	
 {
 	int opt = 0;
 
@@ -37,7 +39,7 @@ void RouteMenu()
 	}
 }
 
-void CalcRouteMenu()
+void Interface::CalcRouteMenu()
 {
 	int opt = 0;
 	string origin, destination;

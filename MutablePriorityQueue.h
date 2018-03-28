@@ -10,6 +10,7 @@
 #define SRC_MUTABLEPRIORITYQUEUE_H_
 
 #include <vector>
+#include <cstddef>
 
 /**
  * class T must have: (i) accessible field int queueIndex; (ii) operator< defined.

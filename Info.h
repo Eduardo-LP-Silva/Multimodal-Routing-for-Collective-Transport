@@ -13,8 +13,6 @@ private:
 
 	string name;
 	int ID;
-	set<string> routes;
-	set<string> lines;
 	bool busStation;
 	bool trainStation;
 
@@ -30,8 +28,6 @@ public:
 	bool is_trainStation() const;
 	void setBusStation(bool bs);
 	void setTrainStation(bool ts);
-	void addRoute(string r);
-	void addLine(string l);
 };
 
 #endif

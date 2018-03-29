@@ -1,4 +1,3 @@
-//Indice, nome, um ou dois sentidos, informacao de autocarros
 1;Rua de Ramalho Ortigão;False;;
 3;Rua da Conceição;False;;
 5;Rua de José Falcão;False;;

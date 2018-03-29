@@ -10,8 +10,6 @@ Info::Info(int id, string n, bool bs, bool ts)
 	ID = id;
 	busStation = bs;
 	trainStation = ts;
-	lines = set<string>();
-	routes = set<string>();
 }
 
 string Info::getName() const
@@ -52,15 +50,5 @@ void Info::setBusStation(bool bs)
 void Info::setTrainStation(bool ts)
 {
 	trainStation = ts;
-}
-
-void Info::addRoute(string r)
-{
-	routes.insert(r);
-}
-
-void Info::addLine(string l)
-{
-	lines.insert(l);
 }
 

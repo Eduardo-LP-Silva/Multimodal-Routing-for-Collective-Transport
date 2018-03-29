@@ -18,6 +18,7 @@ private:
 	int queueIndex = 0; 		
 	int id;
 	bool processing = false;
+	double time;
 
 public:
 	Vertex(GPSCoord c, int ID);
@@ -30,13 +31,13 @@ public:
 	bool isProcessing() const;
 	int getId() const;
 	int getIndex() const;
+	double getTime() const;
 	void setDist(double d);
 	void setPath(Vertex *v);
 	void setProcessing(bool p);
 	void setIndex(int i);
+	void setTime(double t);
 	
 };
-
-
 
 #endif

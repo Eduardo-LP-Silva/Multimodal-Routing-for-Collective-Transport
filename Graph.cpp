@@ -2,30 +2,11 @@
 
 using namespace std;
 
-Graph::Graph(){
+Graph::Graph()
+{
 
-	GPSCoord gp(2.0, 2.0);
+    
 
-	this->addVertex(gp, 0);
-	this->addVertex(gp, 1);
-	this->addVertex(gp, 2);
-	this->addVertex(gp, 3);
-	this->addVertex(gp, 4);
-	this->addVertex(gp, 5);
-
-	this->addEdgeDIS(0, 1, 10);
-	this->addEdgeDIS(0, 2, 20);
-
-	this->addEdgeDIS(2, 3, 20);
-	this->addEdgeDIS(2, 4, 33);
-
-	this->addEdgeDIS(1, 3, 50);
-	this->addEdgeDIS(1, 4, 10);
-
-	this->addEdgeDIS(3, 4, 20);
-	this->addEdgeDIS(3, 5, 2);
-
-	this->addEdgeDIS(4, 5, 1);
 }
 
 int Graph::getNumVertex() const
@@ -153,11 +134,11 @@ void Graph::dijkstraShortestTime(const int &IDorigin)
 	{
 		if (vertexSet.at(i)->getId() == IDorigin)
 		{
-			vertexSet.at(i)->setDist(0);
+			vertexSet.at(i)->setTime(0);
 			qe.insert(vertexSet.at(i));
 		}
 		else
-			vertexSet.at(i)->setDist(INF);
+			vertexSet.at(i)->setTime(INF);
 
 		vertexSet.at(i)->setPath(NULL);
 	}
@@ -169,16 +150,16 @@ void Graph::dijkstraShortestTime(const int &IDorigin)
 
 		for (Edge e : v2->getAdj())
 		{
-			if (e.getDest()->getDist() > v2->getDist() + e.getTime())
+			if (e.getDest()->getTime() > v2->getTime() + e.getTime())
 			{
-				e.getDest()->setDist(v2->getDist() + e.getTime());
+				e.getDest()->setTime(v2->getTime() + e.getTime());
 				e.getDest()->setPath(v2);
 
 				if (!e.getDest()->isProcessing())
 				{
 					e.getDest()->setProcessing(true);
 					qe.insert(e.getDest());
-				}
+ 				}
 				else
 					qe.decreaseKey(e.getDest());
 			}

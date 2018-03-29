@@ -2,7 +2,7 @@
 
 #define BUS_V 14.24
 #define WALK_V 5
-#define TRAIN_V 80
+#define TRAIN_V 40
 
 using namespace std;
 
@@ -34,4 +34,14 @@ Vertex* Edge::getDest() const
 double Edge::getTime() const
 {
 	return time;
+}
+
+void Edge::setInfo(Info i)
+{
+	info = i;
+}
+
+Info Edge::getInfo()
+{
+	return info;
 }

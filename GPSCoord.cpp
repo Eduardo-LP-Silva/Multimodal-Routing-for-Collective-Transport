@@ -22,6 +22,6 @@ double GPSCoord::getLongitude()
 
 bool GPSCoord::operator==(GPSCoord  &gps) const
 {
-	return this->latitude == gps.getLatitude() && this->longitude == gps.getLongitude();
+	return (this->latitude == gps.getLatitude() && this->longitude == gps.getLongitude() );
 }
 

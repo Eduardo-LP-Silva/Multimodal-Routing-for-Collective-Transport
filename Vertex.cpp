@@ -6,6 +6,8 @@ Vertex::Vertex(GPSCoord c, int ID)
 {
 	coords = c;
 	id = ID;
+	time = 0;
+	dist = 0;
 }
 
 /*
@@ -74,4 +76,14 @@ void Vertex::setProcessing(bool p)
 void Vertex::setIndex(int i)
 {
 	queueIndex = i;
+}
+
+void Vertex::setTime(double t)
+{
+	time = t;
+}
+
+double Vertex::getTime() const
+{
+	return time;
 }

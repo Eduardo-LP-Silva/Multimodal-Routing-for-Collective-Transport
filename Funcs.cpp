@@ -124,47 +124,11 @@ void addEdges(Graph *g, string f2, string f3)
 			{
 				i->setBusStation(true);
 
-				pos1_2 = r2l.find(',', pos1_1);
-
-				if (pos1_2 == string::npos)
-				{
-					pos1_2 = r2l.find(';', pos1_1 + 1);
-					route = r2l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1);
-					i->addRoute(route);
-				}
-				else
-					do 
-					{
-						pos1_2 = r2l.find(',', pos1_1 + 1);
-						route = r2l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1);
-						i->addRoute(route);
-						pos1_1 = pos1_2;
-					} 
-					while (pos1_2 != string::npos);		
 			}
 			else
 				if (r2l.at(r2l.length() - 1) == 'm')
 				{
 					i->setTrainStation(true);
-					cout << "Enters cycle";
-
-					pos1_2 = r2l.find(',', pos1_1);
-
-					if (pos1_2 == string::npos)
-					{
-						pos1_2 = r2l.find(';', pos1_1 + 1);
-						line = r2l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1);
-						i->addLine(line);
-					}
-					else
-						do
-						{
-							pos1_2 = r2l.find(',', pos1_1 + 1);
-							line = r2l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1);
-							i->addLine(line);
-							pos1_1 = pos1_2;
-						} 
-						while (pos1_2 != string::npos);
 				}
 		
 		pos1_1 = r3l.find(';');
@@ -185,4 +149,19 @@ void addEdges(Graph *g, string f2, string f3)
 
 	r2.close();
 	r3.close();
+}
+
+double calcDistance(GPSCoord gps1, GPSCoord gps2)
+{
+	return sqrt(pow(gps1.getLatitude() - gps2.getLatitude(), 2) + pow(gps1.getLongitude() - gps2.getLongitude(), 2));
+}
+
+void showPath(vector<int> v)
+{
+	unsigned int i;
+
+	for (i = 0; i < v.size() - 1; i++)
+		cout << v.at(i) << "->";
+
+	cout << v.at(i) << endl;
 }

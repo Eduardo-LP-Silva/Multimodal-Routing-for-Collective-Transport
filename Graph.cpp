@@ -2,6 +2,32 @@
 
 using namespace std;
 
+Graph::Graph(){
+
+	GPSCoord gp(2.0, 2.0);
+
+	this->addVertex(gp, 0);
+	this->addVertex(gp, 1);
+	this->addVertex(gp, 2);
+	this->addVertex(gp, 3);
+	this->addVertex(gp, 4);
+	this->addVertex(gp, 5);
+
+	this->addEdgeDIS(0, 1, 10);
+	this->addEdgeDIS(0, 2, 20);
+
+	this->addEdgeDIS(2, 3, 20);
+	this->addEdgeDIS(2, 4, 33);
+
+	this->addEdgeDIS(1, 3, 50);
+	this->addEdgeDIS(1, 4, 10);
+
+	this->addEdgeDIS(3, 4, 20);
+	this->addEdgeDIS(3, 5, 2);
+
+	this->addEdgeDIS(4, 5, 1);
+}
+
 int Graph::getNumVertex() const
 {
 	return vertexSet.size();
@@ -61,8 +87,21 @@ bool Graph::addEdge(const int &IDsourc, const int &IDdest, Info I, double w = 1)
 	return true;
 }
 
-/**************** Single Source Shortest Path algorithms ************/
+bool Graph::addEdgeDIS(const int &IDsourc, const int &IDdest, double w)
+{
+	auto v1 = findVertex(IDsourc);
+	auto v2 = findVertex(IDdest);
 
+	if (v1 == NULL || v2 == NULL)
+		return false;
+
+	v1->addEdge(v2, w, Info());
+
+	return true;
+}
+
+/**************** Single Source Shortest Path algorithms ************/
+//Para fazer para o tempo temos de substituir o setDist por uma funcao chamada setTime
 void Graph::dijkstraShortestPath(const int &IDorigin)
 {
 	MutablePriorityQueue<Vertex> qe;

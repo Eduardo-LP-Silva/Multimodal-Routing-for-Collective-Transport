@@ -7,7 +7,7 @@ Interface::Interface(Graph g)
 	graph = g;
 }
 
-void Interface::RouteMenu()	
+void Interface::RouteMenu()
 {
 	int opt = 0;
 
@@ -49,9 +49,16 @@ void Interface::CalcRouteMenu()
 
 	cout << "Origin: ";
 	getline(cin, origin);
-	
+
 	cout << endl << endl << "Destination: ";
 	getline(cin, destination);
+
+	graph.dijkstraShortestPath(stoi(origin));
+	vector<int> res = graph.getPath(stoi(origin), stoi(destination));
+
+	for (auto vertex : res){
+		cout << "Vertex: " << vertex << "\n";
+	}
 
 	while (opt != 3)
 	{

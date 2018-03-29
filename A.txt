@@ -1,3 +1,4 @@
+//Indice,latatitude/altitude
 1;764;181
 2;754;182
 3;789;137

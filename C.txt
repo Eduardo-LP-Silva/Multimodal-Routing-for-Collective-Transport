@@ -1,3 +1,4 @@
+Indice, ruas que sao intercetadas
 1;477;1859;
 2;1859;9;
 3;369;1;

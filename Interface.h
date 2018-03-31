@@ -11,12 +11,19 @@ class Interface
 private:
 
 	Graph graph;
+	bool shortest;
+	int limit;
+	string favTransport;
+	Vertex *origin, *dest;
 
 public:
 	
 	Interface(Graph g);
 	void CalcRouteMenu();
 	void RouteMenu();
+	void transportPreferenceMenu();
+	void quickestVsShortestMenu();
+	void findPointMenu(Vertex *&v);
 };
 
 #endif

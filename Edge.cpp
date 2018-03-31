@@ -45,3 +45,8 @@ Info Edge::getInfo()
 {
 	return info;
 }
+
+void Edge::setWeight(double w)
+{
+	weight = w;
+}

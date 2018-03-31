@@ -71,7 +71,7 @@ void addEdges(Graph *g, string f2, string f3)
 
 	r3.open(f3.c_str());
 
-	if (!r2.is_open())
+	if (!r3.is_open())
 	{
 		cout << "Error in opening file 3";
 		return;
@@ -84,24 +84,31 @@ void addEdges(Graph *g, string f2, string f3)
 		street_id2 = extractID(r3l);
 
 		if(street_id1 != street_id2)
-			if(street_id1 > street_id2)
-				while (street_id2 != street_id1)
-				{
-					getline(r3, r3l);
-					street_id2 = extractID(r3l);
-				}
-			else
+			while(street_id1 > street_id2)
 			{
-				cout << "ID error on file 3\n";
-				return;
-			}
+				pos1_1 = r3l.find(';');
+				pos1_2 = r3l.find(';', pos1_1 + 1);
 
+				originID = stoi(r3l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1));
+
+				pos1_1 = pos1_2;
+				pos1_2 = r3l.find(';', pos1_1);
+
+				destID = stoi(r3l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1));
+
+				i = new Info(street_id2, "" + street_id2);
+
+				g->addEdge(originID, destID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+				getline(r3, r3l);
+				street_id2 = extractID(r3l);
+			}
+			
 		pos1_1 = r2l.find(';');
 		
 		if (r2l.at(pos1_1 + 1) == ';')
 		{
-			s_name = " ";
-			pos1_2 = pos1_2 + 1;
+			s_name = street_id1;
+			pos1_2 = pos1_1 + 1;
 		}
 		else
 		{
@@ -116,7 +123,7 @@ void addEdges(Graph *g, string f2, string f3)
 		}
 		else
 			pos1_1 = pos1_2 + 6;
-	
+
 		i = new Info(street_id1, s_name);
 
 		if (r2l.at(pos1_1 + 1) != ';')
@@ -130,9 +137,9 @@ void addEdges(Graph *g, string f2, string f3)
 				{
 					i->setTrainStation(true);
 				}
-		
+
 		pos1_1 = r3l.find(';');
-		pos1_2 = r3l.find(';', pos1_1);
+		pos1_2 = r3l.find(';', pos1_1 + 1);
 
 		originID = stoi(r3l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1));
 
@@ -141,10 +148,10 @@ void addEdges(Graph *g, string f2, string f3)
 
 		destID = stoi(r3l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1));
 
-		g->addEdge(originID, destID, *i, 2);
+		g->addEdge(originID, destID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
 
 		if (bothWays)
-			g->addEdge(destID, originID, *i, 2);
+			g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
 	}
 
 	r2.close();
@@ -156,12 +163,18 @@ double calcDistance(GPSCoord gps1, GPSCoord gps2)
 	return sqrt(pow(gps1.getLatitude() - gps2.getLatitude(), 2) + pow(gps1.getLongitude() - gps2.getLongitude(), 2));
 }
 
-void showPath(vector<int> v)
+void showPath(vector<Vertex*> v)
 {
 	unsigned int i;
 
 	for (i = 0; i < v.size() - 1; i++)
-		cout << v.at(i) << "->";
+	{
+		cout << v.at(i)->getId() << "->";
 
-	cout << v.at(i) << endl;
+		for (unsigned int j = 0; j < v.at(i)->getAdj().size(); j++)
+			if (v.at(i)->getAdj().at(j).getDest()->getId() == v.at(i + 1)->getId())
+				cout << v.at(i)->getAdj().at(j).getInfo().getName() << "->"; 
+	}
+
+	cout << v.at(i)->getId() << endl;
 }

@@ -2,12 +2,7 @@
 
 using namespace std;
 
-Graph::Graph()
-{
-
-    
-
-}
+Graph::Graph(){}
 
 int Graph::getNumVertex() const
 {
@@ -28,6 +23,16 @@ Vertex * Graph::findVertex(const int ID) const
 	for (auto v : vertexSet)
 		if (v->getId() == ID)
 			return v;
+
+	return NULL;
+}
+
+Vertex* Graph::findVertexByEdge(const string name) const
+{
+	for (Vertex* v : vertexSet)
+		for (Edge e : v->getAdj())
+			if (e.getInfo().getName() == name)
+				return v;
 
 	return NULL;
 }
@@ -81,12 +86,11 @@ bool Graph::addEdgeDIS(const int &IDsourc, const int &IDdest, double w)
 	return true;
 }
 
-/**************** Single Source Shortest Path algorithms ************/
-//Para fazer para o tempo temos de substituir o setDist por uma funcao chamada setTime
 void Graph::dijkstraShortestPath(const int &IDorigin)
 {
 	MutablePriorityQueue<Vertex> qe;
 	Vertex *v2;
+	double walk_penalty = 1;
 
 	for (unsigned int i = 0; i < vertexSet.size(); i++)
 	{
@@ -108,6 +112,12 @@ void Graph::dijkstraShortestPath(const int &IDorigin)
 
 		for (Edge e : v2->getAdj())
 		{
+			if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
+			{
+				e.setWeight(e.getWeight() + walk_penalty);
+				walk_penalty += 2;
+			}
+			
 			if (e.getDest()->getDist() > v2->getDist() + e.getWeight())
 			{
 				e.getDest()->setDist(v2->getDist() + e.getWeight());
@@ -167,14 +177,14 @@ void Graph::dijkstraShortestTime(const int &IDorigin)
 	}
 }
 
-vector<int> Graph::getPath(const int &IDorigin, const int &IDdest) const
+vector<Vertex*> Graph::getPath(const int &IDorigin, const int &IDdest) const
 {
-	vector<int> res;
+	vector<Vertex*> res;
 	Vertex *v = findVertex(IDdest);
 
 	while (1)
 	{
-		res.insert(res.begin(), v->getId());
+		res.insert(res.begin(), v);
 
 		if (v->getPath() == NULL)
 			break;

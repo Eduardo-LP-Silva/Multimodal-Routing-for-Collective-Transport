@@ -20,8 +20,10 @@ public:
 	double getWeight() const;
 	Vertex* getDest() const;
 	double getTime() const;
-	void setInfo(Info i);
 	Info getInfo();
+	void setInfo(Info i);
+	void setWeight(double w);
+	
 };
 
 #endif

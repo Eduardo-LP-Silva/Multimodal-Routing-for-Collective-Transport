@@ -5,12 +5,13 @@ using namespace std;
 
 int main()
 {
-	//Graph *g = addVertexes("A.txt");
-	//addEdges(g, "B.txt", "C.txt");
-	Graph* g = new Graph();
-	//Interface interface = Interface(*test_graph);
-	//interface.RouteMenu();
+	Graph *g = addVertexes("A.txt");
+	addEdges(g, "B.txt", "C.txt");
+	
+	Interface interface = Interface(*g);
+	interface.RouteMenu();
 
+	/*
 	GPSCoord gps1 = GPSCoord(10, 1);
 	GPSCoord gps2 = GPSCoord(12, 2);
 	GPSCoord gps3 = GPSCoord(8, 2);
@@ -35,7 +36,7 @@ int main()
 	cout << "Shortest time between 1 and 4: ";
 	g->dijkstraShortestTime(1);
 	showPath(g->getPath(1,4));
-	cout << endl;
+	cout << endl; */
 	
 	return 0;
 }

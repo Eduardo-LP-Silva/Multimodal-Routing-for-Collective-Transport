@@ -9,7 +9,7 @@ Interface::Interface(Graph g)
 	favTransport = "";
 	origin = NULL;
 	dest = NULL;
-	limit = 0;
+	limit = 1000;
 }
 
 void Interface::RouteMenu()
@@ -151,7 +151,7 @@ void Interface::quickestVsShortestMenu()
 void Interface::CalcRouteMenu()
 {
 	int opt = 0;
-	limit = 0;
+	limit = 1000; //Meh... I don't know...
 
 	while (opt != 3)
 	{
@@ -190,9 +190,9 @@ void Interface::CalcRouteMenu()
 			case 3:
 
 				if (shortest)
-					graph.dijkstraShortestPath(origin->getId());
+					graph.dijkstraShortestPath(origin->getId(), favTransport, limit);
 				else
-					graph.dijkstraShortestTime(origin->getId());
+					graph.dijkstraShortestTime(origin->getId(), favTransport, limit);
 
 				showPath(graph.getPath(origin->getId(), dest->getId()));
 

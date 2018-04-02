@@ -1,5 +1,7 @@
 #include "Edge.h"
 
+//Km/h
+
 #define BUS_V 14.24
 #define WALK_V 5
 #define TRAIN_V 40
@@ -12,13 +14,15 @@ Edge::Edge(Vertex *d, double w, Info i)
 	weight = w;
 	info = i;
 
+	//Minutes
+
 	if (i.is_busStation())
-		time = w / BUS_V;
+		time = w / BUS_V * 60;
 	else
 		if (i.is_trainStation())
-			time = w / TRAIN_V;
+			time = w / TRAIN_V * 60;
 		else
-			time = w / WALK_V;
+			time = w / WALK_V * 60;
 }
 
 double Edge::getWeight() const

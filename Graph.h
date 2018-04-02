@@ -27,8 +27,8 @@ public:
 	bool addEdgeDIS(const int &IDsourc, const int &IDdest, double w);
 	int getNumVertex() const;
 	vector<Vertex *> getVertexSet() const;
-	void dijkstraShortestPath(const int &IDorigin);
-	void dijkstraShortestTime(const int &IDorigin);
+	void dijkstraShortestPath(const int &IDorigin, const string ft, double limit);
+	void dijkstraShortestTime(const int &IDorigin, const string ft, double limit);
 	vector<Vertex*> getPath(const int &IDorigin, const int &IDdest) const;
 };
 

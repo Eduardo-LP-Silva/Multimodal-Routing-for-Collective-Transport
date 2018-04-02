@@ -1,7 +1,10 @@
 #ifndef FUNCS_H
 #define FUNCS_H
+#define _USE_MATH_DEFINES
+#define earthRadiusKm 6371.0
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include "Graph.h"
 

@@ -56,14 +56,12 @@ bool Graph::addVertex(const GPSCoord c, const int ID)
 * Returns true if successful, and false if the source or destination vertex does not exist.
 */
 
-bool Graph::addEdge(const int &IDsourc, const int &IDdest, Info I, double w = 1)
+bool Graph::addEdge(const int &IDsourc, const int &IDdest, Info I, double w)
 {
 	auto v1 = findVertex(IDsourc);
 	auto v2 = findVertex(IDdest);
 
-	if(w != 1)
-		w = sqrt(pow(v1->getCoords().getLatitude() - v2->getCoords().getLatitude(), 2)
-			+ pow(v1->getCoords().getLongitude() - v2->getCoords().getLongitude(), 2));
+	
 
 	if (v1 == NULL || v2 == NULL)
 		return false;
@@ -86,11 +84,12 @@ bool Graph::addEdgeDIS(const int &IDsourc, const int &IDdest, double w)
 	return true;
 }
 
-void Graph::dijkstraShortestPath(const int &IDorigin)
+void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double limit)
 {
 	MutablePriorityQueue<Vertex> qe;
 	Vertex *v2;
 	double walk_penalty = 1;
+	double time_passed = 0;
 
 	for (unsigned int i = 0; i < vertexSet.size(); i++)
 	{
@@ -117,9 +116,18 @@ void Graph::dijkstraShortestPath(const int &IDorigin)
 				e.setWeight(e.getWeight() + walk_penalty);
 				walk_penalty += 2;
 			}
-			
-			if (e.getDest()->getDist() > v2->getDist() + e.getWeight())
+
+			if (ft != "")
+				if (e.getInfo().is_busStation() && ft == "Bus")
+					e.setWeight(e.getWeight() / 2);
+				else
+					if(e.getInfo().is_trainStation() && ft == "Train")
+						e.setWeight(e.getWeight() / 2);
+
+			if (e.getDest()->getDist() > v2->getDist() + e.getWeight() && (e.getTime() + time_passed) / 60 * 1.20 <= limit)
 			{
+				time_passed += e.getTime();
+				limit -= (e.getTime() + time_passed) / 60 * 1.20;
 				e.getDest()->setDist(v2->getDist() + e.getWeight());
 				e.getDest()->setPath(v2);
 
@@ -135,7 +143,7 @@ void Graph::dijkstraShortestPath(const int &IDorigin)
 	}
 }
 
-void Graph::dijkstraShortestTime(const int &IDorigin)
+void Graph::dijkstraShortestTime(const int &IDorigin, const string ft, double limit)
 {
 	MutablePriorityQueue<Vertex> qe;
 	Vertex *v2;

@@ -15,15 +15,21 @@ private:
 	int limit;
 	string favTransport;
 	Vertex *origin, *dest;
+	GraphViewer *gv;
 
 public:
 	
-	Interface(Graph g);
+	Interface();
 	void CalcRouteMenu();
+	void graphMenu();
 	void RouteMenu();
 	void transportPreferenceMenu();
 	void quickestVsShortestMenu();
 	void findPointMenu(Vertex *&v);
+	void setGraphViewer(GraphViewer *gv);
+	void setGraph(Graph *g);
+	void createExpGraph();
+	void createTestGraph();
 };
 
 #endif

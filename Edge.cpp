@@ -3,8 +3,8 @@
 //Km/h
 
 #define BUS_V 14.24
-#define WALK_V 5
-#define TRAIN_V 40
+#define WALK_V 5.0
+#define TRAIN_V 40.0
 
 using namespace std;
 
@@ -17,12 +17,12 @@ Edge::Edge(Vertex *d, double w, Info i)
 	//Minutes
 
 	if (i.is_busStation())
-		time = w / BUS_V * 60;
+		time = (w / BUS_V) * 60;
 	else
 		if (i.is_trainStation())
-			time = w / TRAIN_V * 60;
+			time = (w / TRAIN_V) * 60;
 		else
-			time = w / WALK_V * 60;
+			time = (w / WALK_V) * 60;
 }
 
 double Edge::getWeight() const

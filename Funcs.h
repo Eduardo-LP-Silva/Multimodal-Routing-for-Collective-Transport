@@ -10,10 +10,11 @@
 
 void InvalidInput(int n_op, int &op);
 int extractID(string line);
-Graph* addVertexes(string f1);
-void addEdges(Graph *g, string f2, string f3);
+Graph* addVertexes(string f1, string f2, GraphViewer *gv);
+void addEdges(Graph *g, string f2, string f3, GraphViewer *gv);
 double calcDistance(GPSCoord gps1, GPSCoord gps2);
-void showPath(vector<Vertex*> v);
+void showPath(vector<Vertex*> v, GraphViewer *gv);
+
 
 #endif
 

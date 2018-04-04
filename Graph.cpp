@@ -50,6 +50,16 @@ bool Graph::addVertex(const GPSCoord c, const int ID)
 	return true;
 }
 
+bool Graph::addVertex(Vertex *v)
+{
+	if (findVertex(v->getId()) != NULL)
+		return false;
+
+	vertexSet.push_back(v);
+
+	return true;
+}
+
 /*
 * Adds an edge to a graph (this), given the contents of the source and
 * destination vertices and the edge weight (w).
@@ -60,8 +70,6 @@ bool Graph::addEdge(const int &IDsourc, const int &IDdest, Info I, double w)
 {
 	auto v1 = findVertex(IDsourc);
 	auto v2 = findVertex(IDdest);
-
-	
 
 	if (v1 == NULL || v2 == NULL)
 		return false;
@@ -84,12 +92,18 @@ bool Graph::addEdgeDIS(const int &IDsourc, const int &IDdest, double w)
 	return true;
 }
 
+void Graph::setGraphViewer(GraphViewer *gv)
+{
+	this->gv = gv;
+} 
+
 void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double limit)
 {
 	MutablePriorityQueue<Vertex> qe;
 	Vertex *v2;
-	double walk_penalty = 1;
+	double walk_penalty = 10;
 	double time_passed = 0;
+	double distance_to_add = 0;
 
 	for (unsigned int i = 0; i < vertexSet.size(); i++)
 	{
@@ -97,6 +111,7 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 		{
 			vertexSet.at(i)->setDist(0);
 			qe.insert(vertexSet.at(i));
+			gv->setVertexColor(IDorigin, BLUE);
 		}
 		else
 			vertexSet.at(i)->setDist(INF);
@@ -113,9 +128,12 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 		{
 			if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
 			{
-				e.setWeight(e.getWeight() + walk_penalty);
+				distance_to_add = walk_penalty;
+				//e.setWeight(e.getWeight() + walk_penalty);
 				walk_penalty += 2;
 			}
+			else
+				distance_to_add = 0;
 
 			if (ft != "")
 				if (e.getInfo().is_busStation() && ft == "Bus")

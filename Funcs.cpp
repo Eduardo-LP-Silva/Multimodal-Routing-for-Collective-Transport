@@ -20,13 +20,16 @@ int extractID(string line)
 	return stoi(line.substr(0, pos));
 }
 
-Graph* addVertexes(string f1)
+Graph* addVertexes(string f1, string f2, GraphViewer *gv)
 {
-	ifstream r1;
-	string r1l;
+	ifstream r1, rd;
+	string r1l, r2l, label = ".";
 	Graph *g = NULL;
-	int pos1, pos2, node_id;
+	int pos1, pos2, node_id, pos1_d, pos2_d;
 	double lat, longit;
+	int lat_redux, longit_redux;
+
+	label.push_back(1);
 
 	r1.open(f1.c_str());
 
@@ -36,27 +39,43 @@ Graph* addVertexes(string f1)
 		return g;
 	}
 
+	rd.open(f2.c_str());
+
+	if (!rd.is_open())
+	{
+		cout << "Error opening file 2\n";
+		return g;
+	}
+
 	g = new Graph();
 
-	while (getline(r1, r1l))
+	while (getline(r1, r1l) && getline(rd, r2l))
 	{
 		node_id = extractID(r1l);
 		pos1 = r1l.find(';');
-		pos2 = r1l.find(';', pos1);
+		pos1_d = r2l.find(';');
+		pos2 = r1l.find(';', pos1 + 1);
+		pos2_d = r2l.find(';', pos1_d + 1);
 		lat = stod(r1l.substr(pos1 + 1, pos2 - pos1 - 1));
 		longit = stod(r1l.substr(pos2 + 1));
+		lat_redux = stoi(r2l.substr(pos1_d + 1, pos2_d - pos1_d - 1));
+		longit_redux = stoi(r2l.substr(pos2_d + 1));
 		g->addVertex(GPSCoord(lat, longit), node_id);
+		gv->addNode(node_id, lat_redux - 400, longit_redux - 100);
+		gv->setVertexSize(node_id, 1);
+		gv->setVertexLabel(node_id, ".");
 	}
 
 	r1.close();
+	rd.close();
 
 	return g;
 } 
 
-void addEdges(Graph *g, string f2, string f3)
+void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 {
 	ifstream r2, r3;
-	string r2l, r3l, s_name, route, line;
+	string r2l, r3l, rdl, s_name, route, line;
 	int street_id2, street_id1, originID, destID;
 	int pos1_1, pos1_2;
 	bool bothWays = false, no_name = false;
@@ -85,22 +104,35 @@ void addEdges(Graph *g, string f2, string f3)
 		street_id1 = extractID(r2l);
 		street_id2 = extractID(r3l);
 
+
+		/*if(street_id1 != street_id2)
+			while (street_id1 > street_id2)
+			{
+				getline(r3, r3l);
+				street_id2 = extractID(r3l);
+			}*/
+
 		if(street_id1 != street_id2)
 			while(street_id1 > street_id2)
 			{
 				pos1_1 = r3l.find(';');
 				pos1_2 = r3l.find(';', pos1_1 + 1);
-
 				originID = stoi(r3l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1));
 
 				pos1_1 = pos1_2;
-				pos1_2 = r3l.find(';', pos1_1);
+				pos1_2 = r3l.find(';', pos1_1 + 1);
 
 				destID = stoi(r3l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1));
 				
 				i = new Info(street_id2, "Path No " + to_string(street_id2));
 
 				g->addEdge(originID, destID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+				g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+
+				gv->addEdge(street_id2, originID, destID, EdgeType::UNDIRECTED);
+				gv->setEdgeThickness(street_id2, 3);
+				gv->setEdgeColor(street_id2, RED);
+				
 				getline(r3, r3l);
 				street_id2 = extractID(r3l);
 			}
@@ -157,13 +189,49 @@ void addEdges(Graph *g, string f2, string f3)
 		destID = stoi(r3l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1));
 
 		g->addEdge(originID, destID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
-
-		if (bothWays)
-			g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+		
+		if(i->is_busStation())
+			if (bothWays)
+			{
+				gv->addEdge(street_id1, originID, destID, EdgeType::UNDIRECTED);
+				gv->setEdgeThickness(street_id1, 3);
+				gv->setEdgeColor(street_id1, BLUE);
+				g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+			}
+			else
+			{
+				gv->addEdge(street_id1, originID, destID, EdgeType::DIRECTED);
+				gv->setEdgeThickness(street_id1, 3);
+				gv->setEdgeColor(street_id1, BLUE);
+			}
+		else
+			if(i->is_trainStation())
+				if (bothWays)
+				{
+					gv->addEdge(street_id1, originID, destID, EdgeType::UNDIRECTED);
+					gv->setEdgeThickness(street_id1, 3);
+					gv->setEdgeColor(street_id1, GREEN);
+					g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+				}
+				else
+				{
+					gv->addEdge(street_id1, originID, destID, EdgeType::DIRECTED);
+					gv->setEdgeThickness(street_id1, 3);
+					gv->setEdgeColor(street_id1, GREEN);
+				}
+			else
+			{
+				gv->addEdge(street_id1, originID, destID, EdgeType::UNDIRECTED);
+				gv->setEdgeThickness(street_id1, 3);
+				gv->setEdgeColor(street_id1, RED);
+				g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+			}	
 	}
 
 	r2.close();
 	r3.close();
+
+	gv->rearrange();
 }
 
 double toRad(double deg) 
@@ -193,6 +261,7 @@ double calcDistance(GPSCoord gps1, GPSCoord gps2)
 	return res;
 }
 
+/* TEST VERSION
 void showPath(vector<Vertex*> v)
 {
 	unsigned int i;
@@ -225,4 +294,119 @@ void showPath(vector<Vertex*> v)
 	}
 
 	cout << v.at(i)->getId() << endl;
+}*/
+
+/* SLIGHTLY IMPROVED VERSION
+void showPath(vector<Vertex*> v)
+{
+	unsigned int i;
+	double sector_time = 0;
+	string last_sector = "", current_sector = "";
+
+	for (i = 0; i < v.size() - 1; i++)
+	{
+		cout << v.at(i)->getId() << endl
+			<< "|" << endl
+			<< "V" << endl; 
+
+		for (unsigned int j = 0; j < v.at(i)->getAdj().size(); j++)
+			if (v.at(i)->getAdj().at(j).getDest()->getId() == v.at(i + 1)->getId())
+			{
+				cout << v.at(i)->getAdj().at(j).getInfo().getName() << endl
+					<< "|";
+
+				if (v.at(i)->getAdj().at(j).getInfo().is_busStation())
+				{
+					cout << " Bus";
+					current_sector = "Bus";
+				}
+				else
+					if (v.at(i)->getAdj().at(j).getInfo().is_trainStation())
+					{
+						cout << "Subway";
+						current_sector = "Subway";
+					}
+					else
+						current_sector = "Walk";
+
+				if (current_sector != last_sector)
+				{
+					if (v.at(i)->getAdj().at(j).getTime() >= 1)
+						cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() << " minutes)" << endl;
+					else
+						cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() * 60 << " seconds)" << endl;
+
+					sector_time = v.at(i)->getAdj().at(j).getTime();
+				}
+				else
+				{
+					sector_time += v.at(i)->getAdj().at(j).getTime();
+					cout << endl;
+				}
+
+				last_sector = current_sector;
+
+				cout << "V" << endl;
+			}
+	}
+
+	cout << v.at(i)->getId() << endl;
+}*/
+
+void showPath(vector<Vertex*> v, GraphViewer *gv)
+{
+	unsigned int i, j;
+	double sector_time = 0;
+	string last_sector = "", current_sector = "";
+
+	for (i = 0; i < v.size() - 1; i++)
+	{
+		if(i != 0)
+			gv->setVertexColor(v.at(i)->getId(), GREEN);
+
+		for (j = 0; j < v.at(i)->getAdj().size(); j++)
+			if (v.at(i)->getAdj().at(j).getDest()->getId() == v.at(i + 1)->getId())
+			{
+				if (v.at(i)->getAdj().at(j).getInfo().is_busStation())
+				{
+					current_sector = "Bus";
+					gv->setEdgeColor(v.at(i)->getAdj().at(j).getInfo().getID(), YELLOW);
+				}
+				else
+					if (v.at(i)->getAdj().at(j).getInfo().is_trainStation())
+					{
+						current_sector = "Subway";
+						gv->setEdgeColor(v.at(i)->getAdj().at(j).getInfo().getID(), RED);
+					}
+					else
+					{
+						current_sector = "Walk";
+						gv->setEdgeColor(v.at(i)->getAdj().at(j).getInfo().getID(), GREEN);
+					}
+
+				if (i != 0 && current_sector != last_sector)
+				{
+					if (v.at(i)->getAdj().at(j).getTime() >= 1)
+						cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() << " minutes)" << endl;
+					else
+						cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() * 60 << " seconds)" << endl;
+
+					sector_time = v.at(i)->getAdj().at(j).getTime();
+				}
+				else
+					sector_time += v.at(i)->getAdj().at(j).getTime();
+
+				cout << endl << v.at(i)->getAdj().at(j).getInfo().getName() << endl << endl
+					<< "| " << current_sector << endl << "V";
+
+				last_sector = current_sector;
+			}
+	}
+
+	gv->setVertexColor(v.at(i)->getId(), RED);
+	cout << endl << "Destination\n" << endl;
 }
+
+
+
+

@@ -256,9 +256,14 @@ double calcDistance(GPSCoord gps1, GPSCoord gps2)
 	u = sin((lat2r - lat1r) / 2);
 	v = sin((lon2r - lon1r) / 2);
 
-	res = 2.0 * earthRadiusKm * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
+	res = 2.0 * earthRadiusKm * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v)); 
 
-	return res;
+	return res; //Km
+}
+
+double calcDistanceSimplified(GPSCoord gps1, GPSCoord gps2)
+{
+	return sqrt(pow(gps1.getLatitude() - gps2.getLatitude(), 2) + pow(gps1.getLongitude() - gps2.getLongitude(), 2)) / 1000;
 }
 
 /* TEST VERSION
@@ -370,18 +375,15 @@ void showPath(vector<Vertex*> v, GraphViewer *gv)
 				if (v.at(i)->getAdj().at(j).getInfo().is_busStation())
 				{
 					current_sector = "Bus";
-					gv->setEdgeColor(v.at(i)->getAdj().at(j).getInfo().getID(), YELLOW);
 				}
 				else
 					if (v.at(i)->getAdj().at(j).getInfo().is_trainStation())
 					{
 						current_sector = "Subway";
-						gv->setEdgeColor(v.at(i)->getAdj().at(j).getInfo().getID(), RED);
 					}
 					else
 					{
 						current_sector = "Walk";
-						gv->setEdgeColor(v.at(i)->getAdj().at(j).getInfo().getID(), GREEN);
 					}
 
 				if (i != 0 && current_sector != last_sector)

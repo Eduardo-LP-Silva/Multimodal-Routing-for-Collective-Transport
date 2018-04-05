@@ -126,14 +126,14 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 
 		for (Edge e : v2->getAdj())
 		{
-			if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
+			/*if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
 			{
 				distance_to_add = walk_penalty;
 				//e.setWeight(e.getWeight() + walk_penalty);
 				walk_penalty += 2;
 			}
 			else
-				distance_to_add = 0;
+				distance_to_add = 0;*/
 
 			if (ft != "")
 				if (e.getInfo().is_busStation() && ft == "Bus")
@@ -142,7 +142,7 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 					if(e.getInfo().is_trainStation() && ft == "Train")
 						e.setWeight(e.getWeight() / 2);
 
-			if (e.getDest()->getDist() > v2->getDist() + e.getWeight() && (e.getTime() + time_passed) / 60 * 1.20 <= limit)
+			if (e.getDest()->getDist() > v2->getDist() + e.getWeight())
 			{
 				time_passed += e.getTime();
 				limit -= (e.getTime() + time_passed) / 60 * 1.20;

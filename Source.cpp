@@ -4,6 +4,7 @@
 
 using namespace std;
 
+/* 100M
 GraphViewer* initiateGraphV()
 {
 	ifstream inFile;
@@ -115,12 +116,12 @@ GraphViewer* initiateGraphV()
 	gv->rearrange();
 
 	return gv;
-}
+}*/
 
 int main()
 {
 	Interface inter = Interface();
-	inter.RouteMenu();
+	inter.graphMenu();
 
 	/*
 	GPSCoord gps1 = GPSCoord(10, 1);

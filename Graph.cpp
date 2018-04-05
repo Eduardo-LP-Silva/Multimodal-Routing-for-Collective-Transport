@@ -95,7 +95,7 @@ bool Graph::addEdgeDIS(const int &IDsourc, const int &IDdest, double w)
 void Graph::setGraphViewer(GraphViewer *gv)
 {
 	this->gv = gv;
-} 
+}
 
 void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double limit)
 {
@@ -114,8 +114,11 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 			gv->setVertexColor(IDorigin, BLUE);
 		}
 		else
-			vertexSet.at(i)->setDist(INF);
-
+			{
+				vertexSet.at(i)->setDist(INF);
+        gv->setVertexColor(vertexSet.at(i)->getId(), YELLOW);
+			}
+			
 		vertexSet.at(i)->setPath(NULL);
 	}
 

@@ -1,7 +1,7 @@
 ﻿#ifndef _GRAPH_VIEWER_H_
 #define _GRAPH_VIEWER_H_
 
-#ifdef linux
+#ifdef __linux__
 #include <unistd.h>
 #else
 #include <winsock2.h>
@@ -33,7 +33,7 @@
  * Classe que guarda o grafo e o representa. Todas as suas funções retornam um booleano a indicar
  * se a sua execução decorreu ou não com sucesso.
  */
-class GraphViewer 
+class GraphViewer
 {
 public:
 	/**
@@ -314,7 +314,7 @@ public:
 	 */
 	bool rearrange();
 
-#ifdef linux
+#ifdef __linux__
 	static pid_t procId;
 #endif
 

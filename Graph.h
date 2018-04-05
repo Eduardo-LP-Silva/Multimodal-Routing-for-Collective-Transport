@@ -8,12 +8,14 @@
 #include <cmath>
 #include "Vertex.h"
 #include "graphviewer.h"
+#include <cfloat>
+#include <climits> // to work on linux
 
 using namespace std;
 
 #define INF INT_MAX
 
-class Graph 
+class Graph
 {
 private:
 
@@ -22,7 +24,7 @@ private:
 
 public:
 
-	Graph(); //simple default graph 
+	Graph(); //simple default graph
 
 	Vertex *findVertex(const int ID) const;
 	Vertex *findVertexByEdge(const string name) const;

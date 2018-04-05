@@ -3,23 +3,23 @@
 #include <string>
 #include<sstream>
 
-#ifdef linux
+#ifdef __linux__
 pid_t GraphViewer::procId = NULL;
 #endif
 short GraphViewer::port = 7772;
 
-GraphViewer::GraphViewer(int width, int height, bool dynamic) 
+GraphViewer::GraphViewer(int width, int height, bool dynamic)
 {
 	initialize(width, height, dynamic, GraphViewer::port);
 	++GraphViewer::port;
 }
 
-GraphViewer::GraphViewer(int width, int height, bool dynamic, int port_n) 
+GraphViewer::GraphViewer(int width, int height, bool dynamic, int port_n)
 {
 	initialize(width, height, dynamic, port_n);
 }
 
-void GraphViewer::initialize(int width, int height, bool dynamic, int port_n) 
+void GraphViewer::initialize(int width, int height, bool dynamic, int port_n)
 {
 	this->width = width;
 	this->height = height;
@@ -31,7 +31,7 @@ void GraphViewer::initialize(int width, int height, bool dynamic, int port_n)
 	command += " --port ";
 	command += port_string;
 
-#ifdef linux
+#ifdef __linux__ 
 	if (!(procId = fork())) {
 		system(command.c_str());
 		kill(getppid(), SIGINT);
@@ -63,7 +63,7 @@ void GraphViewer::initialize(int width, int height, bool dynamic, int port_n)
 			NULL,           // Use parent's starting directory
 			&si,            // Pointer to STARTUPINFO structure
 			&pi )           // Pointer to PROCESS_INFORMATION structure
-	) 
+	)
 	{
 		cerr << "CreateProcess failed " << GetLastError() << endl;
 		return;
@@ -84,7 +84,7 @@ void GraphViewer::initialize(int width, int height, bool dynamic, int port_n)
 #endif
 }
 
-bool GraphViewer::createWindow(int width, int height) 
+bool GraphViewer::createWindow(int width, int height)
 {
 	char buff[200];
 	sprintf(buff, "createWindow %d %d\n", width, height);
@@ -92,7 +92,7 @@ bool GraphViewer::createWindow(int width, int height)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::closeWindow() 
+bool GraphViewer::closeWindow()
 {
 	char buff[200];
 	sprintf(buff, "closeWindow\n");
@@ -100,9 +100,9 @@ bool GraphViewer::closeWindow()
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::addNode(int id) 
+bool GraphViewer::addNode(int id)
 {
-	if(!isDynamic) 
+	if(!isDynamic)
 	{
 		cerr << "This graph is not dynamic,"
 				"so you must use GraphViewer::addNode(int id, int x, int y) instead.\n"
@@ -118,9 +118,9 @@ bool GraphViewer::addNode(int id)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::addNode(int id, int x, int y) 
+bool GraphViewer::addNode(int id, int x, int y)
 {
-	if(isDynamic) 
+	if(isDynamic)
 	{
 		cerr << "This graph is dynamic, "
 				"so the provided x and y values for the node with id "
@@ -133,7 +133,7 @@ bool GraphViewer::addNode(int id, int x, int y)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::addEdge(int id, int v1, int v2, int edgeType) 
+bool GraphViewer::addEdge(int id, int v1, int v2, int edgeType)
 {
 	char buff[200];
 	sprintf(buff, "addEdge %d %d %d %d\n", id, v1, v2, edgeType);
@@ -141,7 +141,7 @@ bool GraphViewer::addEdge(int id, int v1, int v2, int edgeType)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setEdgeLabel(int k, string label) 
+bool GraphViewer::setEdgeLabel(int k, string label)
 {
 	char buff[200];
 	sprintf(buff, "setEdgeLabel %d %s\n", k, label.c_str());
@@ -149,7 +149,7 @@ bool GraphViewer::setEdgeLabel(int k, string label)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setVertexLabel(int k, string label) 
+bool GraphViewer::setVertexLabel(int k, string label)
 {
 	char buff[200];
 	sprintf(buff, "setVertexLabel %d %s\n", k, label.c_str());
@@ -157,7 +157,7 @@ bool GraphViewer::setVertexLabel(int k, string label)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::defineEdgeColor(string color) 
+bool GraphViewer::defineEdgeColor(string color)
 {
 	char buff[200];
 	sprintf(buff, "defineEdgeColor %s\n", color.c_str());
@@ -165,7 +165,7 @@ bool GraphViewer::defineEdgeColor(string color)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::removeNode(int id) 
+bool GraphViewer::removeNode(int id)
 {
 	char buff[200];
 	sprintf(buff, "removeNode %d\n", id);
@@ -181,7 +181,7 @@ bool GraphViewer::removeEdge(int id)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setEdgeColor(int k, string color) 
+bool GraphViewer::setEdgeColor(int k, string color)
 {
 	char buff[200];
 	sprintf(buff, "setEdgeColor %d %s\n", k, color.c_str());
@@ -189,7 +189,7 @@ bool GraphViewer::setEdgeColor(int k, string color)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::defineEdgeDashed(bool dashed) 
+bool GraphViewer::defineEdgeDashed(bool dashed)
 {
 	char buff[200];
 	sprintf(buff, "defineEdgeDashed %s\n", dashed? "true" : "false");
@@ -205,7 +205,7 @@ bool GraphViewer::setEdgeDashed(int k, bool dashed)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::defineEdgeCurved(bool curved) 
+bool GraphViewer::defineEdgeCurved(bool curved)
 {
 	char buff[200];
 	sprintf(buff, "defineEdgeCurved %s\n", curved? "true" : "false");
@@ -213,7 +213,7 @@ bool GraphViewer::defineEdgeCurved(bool curved)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setEdgeThickness(int k, int thickness) 
+bool GraphViewer::setEdgeThickness(int k, int thickness)
 {
 	char buff[200];
 	sprintf(buff, "setEdgeThickness %d %d\n", k, thickness);
@@ -221,7 +221,7 @@ bool GraphViewer::setEdgeThickness(int k, int thickness)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::defineVertexColor(string color) 
+bool GraphViewer::defineVertexColor(string color)
 {
 	char buff[200];
 	sprintf(buff, "defineVertexColor %s\n", color.c_str());
@@ -229,7 +229,7 @@ bool GraphViewer::defineVertexColor(string color)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setVertexColor(int k, string color) 
+bool GraphViewer::setVertexColor(int k, string color)
 {
 	char buff[200];
 	sprintf(buff, "setVertexColor %d %s\n", k, color.c_str());
@@ -237,7 +237,7 @@ bool GraphViewer::setVertexColor(int k, string color)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::defineVertexIcon(string filepath) 
+bool GraphViewer::defineVertexIcon(string filepath)
 {
 	char buff[200];
 	sprintf(buff, "defineVertexIcon %s\n", filepath.c_str());
@@ -245,7 +245,7 @@ bool GraphViewer::defineVertexIcon(string filepath)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setVertexIcon(int k, string filepath) 
+bool GraphViewer::setVertexIcon(int k, string filepath)
 {
 	char buff[200];
 	sprintf(buff, "setVertexIcon %d %s\n", k, filepath.c_str());
@@ -253,7 +253,7 @@ bool GraphViewer::setVertexIcon(int k, string filepath)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::defineVertexSize(int size) 
+bool GraphViewer::defineVertexSize(int size)
 {
 	char buff[200];
 	sprintf(buff, "defineVertexSize %d\n", size);
@@ -261,7 +261,7 @@ bool GraphViewer::defineVertexSize(int size)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setVertexSize(int k, int size) 
+bool GraphViewer::setVertexSize(int k, int size)
 {
 	char buff[200];
 	sprintf(buff, "setVertexSize %d %d\n", k, size);
@@ -269,7 +269,7 @@ bool GraphViewer::setVertexSize(int k, int size)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setBackground(string path) 
+bool GraphViewer::setBackground(string path)
 {
 	char buff[200];
 	sprintf(buff, "setBackground %s\n", path.c_str());
@@ -277,7 +277,7 @@ bool GraphViewer::setBackground(string path)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setEdgeWeight(int id, int weight) 
+bool GraphViewer::setEdgeWeight(int id, int weight)
 {
 	char buff[200];
 	sprintf(buff, "setEdgeWeight %d %d\n", id, weight);
@@ -285,7 +285,7 @@ bool GraphViewer::setEdgeWeight(int id, int weight)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::setEdgeFlow(int id, int flow) 
+bool GraphViewer::setEdgeFlow(int id, int flow)
 {
 	char buff[200];
 	sprintf(buff, "setEdgeFlow %d %d\n", id, flow);
@@ -293,7 +293,7 @@ bool GraphViewer::setEdgeFlow(int id, int flow)
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::rearrange() 
+bool GraphViewer::rearrange()
 {
 	return con->sendMsg("rearrange\n");
 }

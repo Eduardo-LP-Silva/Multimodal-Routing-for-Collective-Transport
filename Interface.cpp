@@ -60,7 +60,7 @@ void Interface::RouteMenu()
 
 	while (opt != 2)
 	{
-		cout 
+		cout
 			<< "+------------------------------+\n"
 			<< "| Collective Transport Routing |\n"
 			<< "+------------------------------+\n"
@@ -87,7 +87,7 @@ void Interface::RouteMenu()
 					return;
 
 				quickestVsShortestMenu();
-				
+
 				break;
 
 			case 2:
@@ -124,12 +124,12 @@ void Interface::findPointMenu(Vertex* &v)
 	switch (opt)
 	{
 		case 1:
-				
+
 			cin.clear();
 			cin.ignore(1000, '\n');
 			getline(cin, ori);
 			v = graph.findVertexByEdge(ori);
-		
+
 			if (v == NULL)
 			{
 				cout << "Street not found\n" << endl;
@@ -329,7 +329,8 @@ void Interface::createTestGraph()
 	GPSCoord rivoliGPS(830, 218);
 	GPSCoord CamaraGPS(799, 191);
 	GPSCoord CasaGPS(789, 170);
-	
+	GPSCoord CMVGPS(650,200);
+
 
 	Vertex *v1 = new Vertex(trindadeGPS, 1);
 	Vertex *v2 = new Vertex(aliadosGPS, 2);
@@ -340,6 +341,7 @@ void Interface::createTestGraph()
 	Vertex *v7 = new Vertex(rivoliGPS, 7);
 	Vertex *v8 = new Vertex(CamaraGPS, 8);
 	Vertex *v9 = new Vertex(CasaGPS, 9);
+  Vertex *v10 = new Vertex(CMVGPS,10);
 
 	Info TAL(1, "1-2", false, true); // METRO 1-2
 	Info ASB(2, "2-3", false, false); // PE 2-3
@@ -357,6 +359,8 @@ void Interface::createTestGraph()
 	Info CLEPSP(14, "5-6", false, false); // PE 5-6
 	Info TRIMCAM(15, "1-8", false, false); // PE 1-8
 
+	Info CMV(16,"CMV-3", false, true); // METRO CMV-3
+
 	graph.addVertex(v1);
 	graph.addVertex(v2);
 	graph.addVertex(v3);
@@ -366,9 +370,10 @@ void Interface::createTestGraph()
 	graph.addVertex(v7);
 	graph.addVertex(v8);
 	graph.addVertex(v9);
+	graph.addVertex(v10);
 
 
-	/*
+	/*~
 	gv->addNode(v1->getId(), 811, 172);
 	gv->addNode(v2->getId(), 751, 243);
 	gv->addNode(v3->getId(), 746, 255);
@@ -379,7 +384,7 @@ void Interface::createTestGraph()
 	gv->addNode(v8->getId(), 799, 200);
 	gv->addNode(v9->getId(), 789, 82);*/
 
-	
+
 	for(Vertex *v: graph.getVertexSet())
 	for (unsigned int i = 1; i < graph.getVertexSet().size(); i++)
 	{
@@ -479,6 +484,12 @@ void Interface::createTestGraph()
 	gv->addEdge(TRIMCAM.getID(), v1->getId(), v8->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(TRIMCAM.getID(), 3);
 	gv->setEdgeColor(TRIMCAM.getID(), RED);
+
+
+	graph.addEdge(v10->getId(), v3->getId(), CMV, calcDistanceSimplified(CMVGPS, SBentoGPS));  // CMV-3
+
+	gv->addEdge(CMV.getID(), v10->getId(), v3->getId(), EdgeType::DIRECTED);
+	gv->setEdgeThickness(CMV.getID(), 3);
+	gv->setEdgeColor(CMV.getID(), GREEN);
+
 }
-
-

@@ -190,7 +190,8 @@ void Interface::quickestVsShortestMenu()
 void Interface::CalcRouteMenu()
 {
 	int opt = 0;
-	limit = 1000; //Meh... I don't know...
+	limit = INF; //Meh... I don't know...
+	favTransport = "";
 
 	while (opt != 3)
 	{
@@ -246,37 +247,33 @@ void Interface::transportPreferenceMenu()
 {
 	int opt = 0;
 
-	while (opt != 3)
+	favTransport = "";
+
+	cout
+		<< "+------------+\n"
+		<< "| 1 - Train  |\n"
+		<< "+------------+\n"
+		<< "| 2- Bus     |\n"
+		<< "+------------+\n"
+		<< "| 3- Go Back |\n"
+		<< "+------------+\n" << endl;
+
+	cin >> opt;
+	
+	InvalidInput(3, opt);
+
+	switch (opt)
 	{
-		favTransport = "";
+		case 1:
+			favTransport = "Train";
+			break;
 
-		cout
-			<< "+------------+\n"
-			<< "| 1 - Train  |\n"
-			<< "+------------+\n"
-			<< "| 2- Bus     |\n"
-			<< "+------------+\n"
-			<< "| 3- Go Back |\n"
-			<< "+------------+\n" << endl;
+		case 2:
+			favTransport = "Bus";
+			break;
 
-		cin >> opt;
-
-		InvalidInput(3, opt);
-
-		switch (opt)
-		{
-			case 1:
-				favTransport = "Train";
-				break;
-
-			case 2:
-				favTransport = "Bus";
-				break;
-
-			case 3:
-				return;
-		}
-
+		case 3:
+			return;
 	}
 }
 
@@ -320,16 +317,16 @@ void Interface::createTestGraph()
 
 	graph.setGraphViewer(gv);
 
-	GPSCoord trindadeGPS(811, 172);
-	GPSCoord aliadosGPS(751, 243);
-	GPSCoord SBentoGPS(746, 255);
-	GPSCoord ReitoriaGPS(750, 222);
-	GPSCoord ClerigosGPS(770, 240);
-	GPSCoord PSPGPS(810, 277);
-	GPSCoord rivoliGPS(830, 218);
-	GPSCoord CamaraGPS(799, 191);
-	GPSCoord CasaGPS(789, 170);
-	GPSCoord CMVGPS(450,200);
+	GPSCoord trindadeGPS(811, 172); //1
+	GPSCoord aliadosGPS(751, 243); //2
+	GPSCoord SBentoGPS(746, 255); //3
+	GPSCoord ReitoriaGPS(750, 222); //4
+	GPSCoord ClerigosGPS(770, 240); //5
+	GPSCoord PSPGPS(810, 277); //6
+	GPSCoord rivoliGPS(830, 218); //7
+	GPSCoord CamaraGPS(799, 191); //8
+	GPSCoord CasaGPS(789, 170); //9
+	GPSCoord CMVGPS(450,200); //10
 	GPSCoord gps11(450, 250);
 	GPSCoord gps12(500, 230);
 	GPSCoord gps13(550, 207);
@@ -374,6 +371,8 @@ void Interface::createTestGraph()
 	Info i20(20, "13-14", false, false); //PE 13-14
 	Info i21(21, "14-15", false, false); //PE 14-15
 	Info i22(22, "15-4", false, false); //PE 15-4
+	Info i23(23, "10-13", false, false); //PE 10-13
+	Info i24(24, "1-9", false, false); //PE 1-9
 
 
 	graph.addVertex(v1);
@@ -465,8 +464,9 @@ void Interface::createTestGraph()
 	gv->setEdgeColor(CLEPSP.getID(), RED);
 
 	graph.addEdge(v4->getId(), v3->getId(), REISB, calcDistanceSimplified(ReitoriaGPS, SBentoGPS)); // 4 -3
+	graph.addEdge(v3->getId(), v4->getId(), REISB, calcDistanceSimplified(ReitoriaGPS, SBentoGPS));
 
-	gv->addEdge(REISB.getID(), v4->getId(), v3->getId(), EdgeType::DIRECTED);
+	gv->addEdge(REISB.getID(), v4->getId(), v3->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(REISB.getID(), 3);
 	gv->setEdgeColor(REISB.getID(), BLUE);
 
@@ -505,8 +505,9 @@ void Interface::createTestGraph()
 	gv->setEdgeColor(TRIMCAM.getID(), RED);
 
 	graph.addEdge(v10->getId(), v3->getId(), CMV, calcDistanceSimplified(CMVGPS, SBentoGPS));  // CMV-3
+	graph.addEdge(v3->getId(), v10->getId(), CMV, calcDistanceSimplified(CMVGPS, SBentoGPS));
 
-	gv->addEdge(CMV.getID(), v10->getId(), v3->getId(), EdgeType::DIRECTED);
+	gv->addEdge(CMV.getID(), v10->getId(), v3->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(CMV.getID(), 3);
 	gv->setEdgeColor(CMV.getID(), GREEN);
 
@@ -518,8 +519,9 @@ void Interface::createTestGraph()
 	gv->setEdgeColor(i17.getID(), RED);
 
 	graph.addEdge(v11->getId(), v12->getId(), i18, calcDistanceSimplified(gps11, gps12)); //11-12
+	graph.addEdge(v12->getId(), v11->getId(), i18, calcDistanceSimplified(gps11, gps12));
 
-	gv->addEdge(i18.getID(), v11->getId(), v12->getId(), EdgeType::DIRECTED);
+	gv->addEdge(i18.getID(), v11->getId(), v12->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(i18.getID(), 3);
 	gv->setEdgeColor(i18.getID(), BLUE);
 
@@ -550,6 +552,20 @@ void Interface::createTestGraph()
 	gv->addEdge(i22.getID(), v15->getId(), v4->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(i22.getID(), 3);
 	gv->setEdgeColor(i22.getID(), RED); 
+
+	graph.addEdge(v10->getId(), v13->getId(), i23, calcDistanceSimplified(CMVGPS, gps13)); //10-13
+	graph.addEdge(v13->getId(), v10->getId(), i23, calcDistanceSimplified(CMVGPS, gps13));
+
+	gv->addEdge(i23.getID(), v13->getId(), v10->getId(), EdgeType::UNDIRECTED);
+	gv->setEdgeThickness(i23.getID(), 3);
+	gv->setEdgeColor(i23.getID(), RED);
+
+	graph.addEdge(v1->getId(), v9->getId(), i24, calcDistanceSimplified(trindadeGPS, CasaGPS)); //1-9
+	graph.addEdge(v9->getId(), v1->getId(), i24, calcDistanceSimplified(trindadeGPS, CasaGPS));
+
+	gv->addEdge(i24.getID(), v1->getId(), v9->getId(), EdgeType::UNDIRECTED);
+	gv->setEdgeThickness(i24.getID(), 3);
+	gv->setEdgeColor(i24.getID(), RED);
 
 
 

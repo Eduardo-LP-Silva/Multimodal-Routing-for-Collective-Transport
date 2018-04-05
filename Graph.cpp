@@ -101,7 +101,7 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 {
 	MutablePriorityQueue<Vertex> qe;
 	Vertex *v2;
-	double walk_penalty = 10;
+	double walk_penalty = 0;
 	double time_passed = 0;
 	double distance_to_add = 0;
 
@@ -116,7 +116,7 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 		else
 			{
 				vertexSet.at(i)->setDist(INF);
-        gv->setVertexColor(vertexSet.at(i)->getId(), YELLOW);
+				gv->setVertexColor(vertexSet.at(i)->getId(), YELLOW);
 			}
 			
 		vertexSet.at(i)->setPath(NULL);
@@ -129,27 +129,28 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 
 		for (Edge e : v2->getAdj())
 		{
-			/*if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
+			distance_to_add = e.getWeight();
+			walk_penalty = 0;
+
+			if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
 			{
-				distance_to_add = walk_penalty;
-				//e.setWeight(e.getWeight() + walk_penalty);
-				walk_penalty += 2;
+				walk_penalty = e.getWeight() / 2;
+				distance_to_add += walk_penalty;
 			}
-			else
-				distance_to_add = 0;*/
+			
 
 			if (ft != "")
 				if (e.getInfo().is_busStation() && ft == "Bus")
-					e.setWeight(e.getWeight() / 2);
+					distance_to_add /= 2;
 				else
 					if(e.getInfo().is_trainStation() && ft == "Train")
-						e.setWeight(e.getWeight() / 2);
+						distance_to_add /= 2;
 
-			if (e.getDest()->getDist() > v2->getDist() + e.getWeight())
+			if (e.getDest()->getDist() > v2->getDist() + distance_to_add)
 			{
 				time_passed += e.getTime();
 				limit -= (e.getTime() + time_passed) / 60 * 1.20;
-				e.getDest()->setDist(v2->getDist() + e.getWeight());
+				e.getDest()->setDist(v2->getDist() + distance_to_add);
 				e.getDest()->setPath(v2);
 
 				if (!e.getDest()->isProcessing())

@@ -34,6 +34,7 @@ public:
 	bool addEdgeDIS(const int &IDsourc, const int &IDdest, double w);
 	int getNumVertex() const;
 	vector<Vertex *> getVertexSet() const;
+	void dijkstraShortestPathOriginal(const int &IDorigin);
 	void dijkstraShortestPath(const int &IDorigin, const string ft, double limit);
 	void dijkstraShortestTime(const int &IDorigin, const string ft, double limit);
 	void setGraphViewer(GraphViewer *gv);

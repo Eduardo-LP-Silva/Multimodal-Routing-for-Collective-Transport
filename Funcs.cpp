@@ -62,7 +62,7 @@ Graph* addVertexes(string f1, string f2, GraphViewer *gv)
 		longit_redux = stoi(r2l.substr(pos2_d + 1));
 		g->addVertex(GPSCoord(lat, longit), node_id);
 		gv->addNode(node_id, lat_redux - 400, longit_redux - 100);
-		gv->setVertexSize(node_id, 1);
+		gv->setVertexSize(node_id, 5);
 		gv->setVertexLabel(node_id, ".");
 	}
 
@@ -103,14 +103,6 @@ void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 		no_name = false;
 		street_id1 = extractID(r2l);
 		street_id2 = extractID(r3l);
-
-
-		/*if(street_id1 != street_id2)
-			while (street_id1 > street_id2)
-			{
-				getline(r3, r3l);
-				street_id2 = extractID(r3l);
-			}*/
 
 		if(street_id1 != street_id2)
 			while(street_id1 > street_id2)
@@ -161,21 +153,16 @@ void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 
 		i = new Info(street_id1, s_name);
 
+		
 		if (r2l.at(pos1_1 + 1) != ';')
 			if (r2l.at(r2l.length() - 1) == 's')
 			{
 				i->setBusStation(true);
-
-				if (no_name)
-					i->setName("Bus");
 			}
 			else
 				if (r2l.at(r2l.length() - 1) == 'm')
 				{
 					i->setTrainStation(true);
-
-					if (no_name)
-						i->setName("Subway");
 				}
 
 		pos1_1 = r3l.find(';');
@@ -388,10 +375,10 @@ void showPath(vector<Vertex*> v, GraphViewer *gv)
 
 				if (i != 0 && current_sector != last_sector)
 				{
-					if (v.at(i)->getAdj().at(j).getTime() >= 1)
-						cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() << " minutes)" << endl;
+					if (sector_time >= 1)
+						cout << fixed << setprecision(0) << " (" << sector_time << " minutes)" << endl;
 					else
-						cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() * 60 << " seconds)" << endl;
+						cout << fixed << setprecision(0) << " (" << sector_time * 60 << " seconds)" << endl;
 
 					sector_time = v.at(i)->getAdj().at(j).getTime();
 				}
@@ -406,7 +393,13 @@ void showPath(vector<Vertex*> v, GraphViewer *gv)
 	}
 
 	gv->setVertexColor(v.at(i)->getId(), RED);
-	cout << endl << "Destination\n" << endl;
+
+	cout << endl << "Destination";
+
+	if (sector_time >= 1)
+		cout << fixed << setprecision(0) << " (" << sector_time << " minutes)" << endl;
+	else
+		cout << fixed << setprecision(0) << " (" << sector_time * 60 << " seconds)\n" << endl;
 }
 
 

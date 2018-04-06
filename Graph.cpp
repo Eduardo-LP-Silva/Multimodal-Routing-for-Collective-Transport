@@ -97,6 +97,48 @@ void Graph::setGraphViewer(GraphViewer *gv)
 	this->gv = gv;
 }
 
+void Graph::dijkstraShortestPathOriginal(const int &IDorigin)
+{
+	MutablePriorityQueue<Vertex> qe;
+	Vertex *v2;
+
+	for (unsigned int i = 0; i < vertexSet.size(); i++)
+	{
+		if (vertexSet.at(i)->getId() == IDorigin)
+		{
+			vertexSet.at(i)->setDist(0);
+			qe.insert(vertexSet.at(i));
+		}
+		else
+			vertexSet.at(i)->setDist(INF);
+
+		vertexSet.at(i)->setPath(NULL);
+	}
+
+	while (!qe.empty())
+	{
+		v2 = qe.extractMin();
+		v2->setProcessing(false);
+
+		for (Edge e : v2->getAdj())
+		{
+			if (e.getDest()->getDist() > v2->getDist() + e.getWeight())
+			{
+				e.getDest()->setDist(v2->getDist() + e.getWeight());
+				e.getDest()->setPath(v2);
+
+				if (!e.getDest()->isProcessing())
+				{
+					e.getDest()->setProcessing(true);
+					qe.insert(e.getDest());
+				}
+				else
+					qe.decreaseKey(e.getDest());
+			}
+		}
+	}
+}
+
 void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double limit)
 {
 	MutablePriorityQueue<Vertex> qe;
@@ -134,7 +176,7 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 
 			if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
 			{
-				walk_penalty = e.getWeight() / 2;
+				walk_penalty = e.getWeight() / 3;
 				distance_to_add += walk_penalty;
 			}
 			
@@ -148,8 +190,8 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 
 			if (e.getDest()->getDist() > v2->getDist() + distance_to_add)
 			{
-				time_passed += e.getTime();
-				limit -= (e.getTime() + time_passed) / 60 * 1.20;
+				/*time_passed += e.getTime();
+				limit -= (e.getTime() + time_passed) / 60 * 1.20;*/
 				e.getDest()->setDist(v2->getDist() + distance_to_add);
 				e.getDest()->setPath(v2);
 

@@ -155,19 +155,23 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 		if (vertexSet.at(i)->getId() == IDorigin)
 		{
 			vertexSet.at(i)->setDist(0);
-			vertexSet.at(i)->setTime(0);
+			vertexSet.at(i)->setTimeCount(0);
 			qe.insert(vertexSet.at(i));
 			gv->setVertexColor(IDorigin, BLUE);
+			vertexSet.at(i)->setProcessing(true);
 		}
 		else
 			{
 				vertexSet.at(i)->setDist(INF);
-				vertexSet.at(i)->setTime(0);
+				vertexSet.at(i)->setTimeCount(0);
 				gv->setVertexColor(vertexSet.at(i)->getId(), YELLOW);
+				vertexSet.at(i)->setProcessing(false);
 			}
 			
 		vertexSet.at(i)->setPath(NULL);
 		vertexSet.at(i)->setCost(0);
+		vertexSet.at(i)->setCounting(false);
+		
 
 		if(!test)
 			gv->setVertexSize(vertexSet.at(i)->getId(), 5);
@@ -185,7 +189,7 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 
 			if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
 			{
-				walk_penalty = e.getWeight() / 2;
+				walk_penalty = e.getWeight();
 				distance_to_add += walk_penalty;
 			}
 			else
@@ -198,7 +202,7 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 					if(!v2->isCounting())
 					{
 						v2->setCounting(true);
-						v2->setTime(0);
+						v2->setTimeCount(0);
 						v2->setCost(v2->getCost() + 1.20);
 					}
 
@@ -222,15 +226,15 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 			if (e.getDest()->getDist() > v2->getDist() + distance_to_add)
 			{
 				if (v2->isCounting())
-					if ((v2->getTime() + e.getTime()) / 60 > 1)
+					if ((v2->getTimeCount() + e.getTime()) / 60 > 1)
 						v2->setCounting(false);
 					else
 					{
-						e.getDest()->setTime(v2->getTime() + e.getTime());
-						e.getDest()->setCounting(true);
+						e.getDest()->setTimeCount(v2->getTimeCount() + e.getTime());
+						//e.getDest()->setCounting(true);
 					}
 
-				e.getDest()->setTime(v2->getTime() + e.getTime());
+				//e.getDest()->setTimeCount(v2->getTimeCount() + e.getTime());
 				e.getDest()->setDist(v2->getDist() + distance_to_add);
 				e.getDest()->setPath(v2);
 

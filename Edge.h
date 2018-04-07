@@ -10,7 +10,7 @@ class Edge
 private:
 
 	Vertex * dest;      // destination vertex
-	double weight;         // edge weight
+	double weight;      // edge weight
 	double time;
 	Info info;
 

@@ -12,7 +12,7 @@ private:
 	
 	GPSCoord coords;             
 	vector<Edge> adj;  // outgoing edges
-	bool visited;          // auxiliary field
+	bool visited;      // auxiliary field
 	double dist = 0;
 	Vertex *path = NULL;
 	int queueIndex = 0; 		
@@ -22,6 +22,7 @@ private:
 	bool limitReached = false;
 	double time;
 	double cost;
+	double time_count;
 
 public:
 	Vertex(GPSCoord c, int ID);
@@ -38,6 +39,7 @@ public:
 	double getCost() const;
 	bool isCounting() const;
 	bool isLimitReached() const;
+	double getTimeCount() const;
 	void setDist(double d);
 	void setPath(Vertex *v);
 	void setProcessing(bool p);
@@ -46,6 +48,7 @@ public:
 	void setCost(double c);
 	void setCounting(bool c);
 	void setLimitReached(bool lr);
+	void setTimeCount(double tc);
 	
 };
 

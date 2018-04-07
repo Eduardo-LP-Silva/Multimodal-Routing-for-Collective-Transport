@@ -178,34 +178,20 @@ void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 		g->addEdge(originID, destID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
 		
 		if(i->is_busStation())
-			if (bothWays)
+		{ 
+			gv->addEdge(street_id1, originID, destID, EdgeType::UNDIRECTED);
+			gv->setEdgeThickness(street_id1, 3);
+			gv->setEdgeColor(street_id1, BLUE);
+			g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+		}
+		else
+			if(i->is_trainStation())	
 			{
 				gv->addEdge(street_id1, originID, destID, EdgeType::UNDIRECTED);
 				gv->setEdgeThickness(street_id1, 3);
-				gv->setEdgeColor(street_id1, BLUE);
+				gv->setEdgeColor(street_id1, GREEN);
 				g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
 			}
-			else
-			{
-				gv->addEdge(street_id1, originID, destID, EdgeType::DIRECTED);
-				gv->setEdgeThickness(street_id1, 3);
-				gv->setEdgeColor(street_id1, BLUE);
-			}
-		else
-			if(i->is_trainStation())
-				if (bothWays)
-				{
-					gv->addEdge(street_id1, originID, destID, EdgeType::UNDIRECTED);
-					gv->setEdgeThickness(street_id1, 3);
-					gv->setEdgeColor(street_id1, GREEN);
-					g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
-				}
-				else
-				{
-					gv->addEdge(street_id1, originID, destID, EdgeType::DIRECTED);
-					gv->setEdgeThickness(street_id1, 3);
-					gv->setEdgeColor(street_id1, GREEN);
-				}
 			else
 			{
 				gv->addEdge(street_id1, originID, destID, EdgeType::UNDIRECTED);

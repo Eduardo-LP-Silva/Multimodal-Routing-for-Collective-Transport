@@ -117,3 +117,13 @@ bool Vertex::isLimitReached() const
 {
 	return limitReached;
 }
+
+double Vertex::getTimeCount() const
+{
+	return time_count;
+}
+
+void Vertex::setTimeCount(double tc)
+{
+	time_count = tc;
+}

@@ -194,7 +194,7 @@ void Interface::quickestVsShortestMenu()
 void Interface::CalcRouteMenu()
 {
 	int opt = 0;
-	limit = INF; //Meh... I don't know...
+	limit = INF;
 	favTransport = "";
 
 	while (opt != 3)

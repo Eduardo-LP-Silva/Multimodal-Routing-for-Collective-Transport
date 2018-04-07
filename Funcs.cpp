@@ -345,7 +345,7 @@ void showPath(vector<Vertex*> v)
 	cout << v.at(i)->getId() << endl;
 }*/
 
-void showPath(vector<Vertex*> v, GraphViewer *gv)
+void showPath(vector<Vertex*> v, GraphViewer *gv, bool increaseSize)
 {
 	unsigned int i, j;
 	double sector_time = 0;
@@ -353,8 +353,14 @@ void showPath(vector<Vertex*> v, GraphViewer *gv)
 
 	for (i = 0; i < v.size() - 1; i++)
 	{
+		if (increaseSize)
+			gv->setVertexSize(v.at(i)->getId(), 15);
+
 		if(i != 0)
 			gv->setVertexColor(v.at(i)->getId(), GREEN);
+		else
+			if(increaseSize)
+				gv->setVertexSize(v.at(i)->getId(), 20);
 
 		for (j = 0; j < v.at(i)->getAdj().size(); j++)
 			if (v.at(i)->getAdj().at(j).getDest()->getId() == v.at(i + 1)->getId())
@@ -392,7 +398,12 @@ void showPath(vector<Vertex*> v, GraphViewer *gv)
 			}
 	}
 
+	if (increaseSize)
+		gv->setVertexSize(v.at(i)->getId(), 20);
+
 	gv->setVertexColor(v.at(i)->getId(), RED);
+
+	
 
 	cout << endl << "Destination";
 

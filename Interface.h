@@ -12,7 +12,8 @@ private:
 
 	Graph graph;
 	bool shortest;
-	int limit;
+	bool test;
+	double limit;
 	string favTransport;
 	Vertex *origin, *dest;
 	GraphViewer *gv;

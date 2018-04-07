@@ -23,7 +23,7 @@
 134;Rua Doutor Ferreira da Silva;True;104,602;bus
 138;Campo dos Martires da Patria;False;201,207,200,30,104,602,301;bus
 148;Rua dos Clerigos;False;201,207,200,30,500,301;bus
-157;Rua Heróis e Martires de Angola;False;30,3M,600;bus
+157;Rua Herois e Martires de Angola;False;30,3M,600;bus
 164;Rua de Clemente Meneres;False;201,207,200,104,602,300;bus
 178;Rua Moreira da Assuncao;False;;
 179;Largo da Lapa;False;30,600;bus
@@ -40,7 +40,7 @@
 243;;False;D;tram
 245;Rua de Dom Joao I;False;;
 250;Rua de Tras;False;;
-253;Rua da Vitória;False;;
+253;Rua da Vitoria;False;;
 271;Rua da Fonte Taurina;False;;
 279;Rua de O Comercio do Porto;False;;
 291;Rua da Bolsa;False;;
@@ -57,7 +57,7 @@
 345;;False;D;tram
 348;Rua de Augusto Rosa;False;;
 363;Tunel Ferroviario da Lapa;False;E,C,A,F,B;tram
-364;Rua de Goncalo Cristóvao;False;30,10,3M,600;bus
+364;Rua de Goncalo Cristovao;False;30,10,3M,600;bus
 371;Rua do Almada;False;;
 382;Praca da Republica;False;10,3M;bus
 385;Rua de Fonseca Cardoso;False;;
@@ -73,9 +73,9 @@
 433;;False;E,C,A,F,B;tram
 435;Rua da Trindade;False;30,3M,600;bus
 448;Rua de Faria Guimaraes;False;;
-450;Rua de Goncalo Cristóvao;False;10,;bus
-458;Rua de Goncalo Cristóvao;False;10,;bus
-459;Rua de Goncalo Cristóvao;False;;
+450;Rua de Goncalo Cristovao;False;10,;bus
+458;Rua de Goncalo Cristovao;False;10,;bus
+459;Rua de Goncalo Cristovao;False;;
 463;;False;;
 469;Rua do Bonjardim;False;;
 474;Praca da Republica;False;30,600;bus
@@ -109,7 +109,7 @@
 661;Rua dos Pelames;True;;
 668;Rua de Sao Sebastiao;True;;
 671;;False;;
-674;Rua de Raul Dória;False;;
+674;Rua de Raul Doria;False;;
 680;Travessa das Musas;False;;
 684;Calcada do Leal;False;;
 686;Calcada do Leal;False;;
@@ -118,10 +118,10 @@
 694;Rua de Cedofeita;False;301;bus
 704;Rua de Ricardo Jorge;False;;
 711;Rua da Picaria;False;;
-715;Rua Doutor António Luis Gomes;False;30,3M,600;bus
+715;Rua Doutor Antonio Luis Gomes;False;30,3M,600;bus
 725;Rua do Clube dos Fenianos;False;30,3M,600;bus
 737;Rua de Camoes;False;30,3M,600;bus
-740;Viaduto de Goncalo Cristóvao;True;10;bus
+740;Viaduto de Goncalo Cristovao;True;10;bus
 742;Rua Nova da Alfandega;True;500,EN 12;busroad
 761;Rua Tareija Vaz de Altaro;False;;
 766;;False;D;tram
@@ -132,7 +132,7 @@
 791;Praca Gen. Humberto Delgado;False;;
 796;Rua Formosa;False;;
 804;Rua de Sao Joao Novo;False;;
-806;Rua de Sao Bento da Vitória;False;;
+806;Rua de Sao Bento da Vitoria;False;;
 811;Rua Sa de Noronha;False;;
 816;Rua de Ceuta;False;201,207,200,30,300;bus
 824;Rua da Madeira;True;;
@@ -167,7 +167,7 @@
 976;;False;;
 981;;False;;
 987;Travessa da Regeneracao;False;;
-999;Rua de Goncalo Cristóvao;False;10,;bus
+999;Rua de Goncalo Cristovao;False;10,;bus
 1003;Rua da Fabrica;False;;
 1005;Rua Doutor Magalhaes Lemos;False;201,207,200,300;bus
 1011;Rua de Jose Falcao;False;201,207,200,30,300;bus
@@ -210,13 +210,13 @@
 1182;;True;;
 1183;Rua de Santa Ana;True;;
 1190;;True;;
-1191;Rua de Goncalo Cristóvao;False;10,;bus
+1191;Rua de Goncalo Cristovao;False;10,;bus
 1192;Rua de Camoes;False;30,3M,600;bus
 1194;Largo da Lapa;False;30,600;bus
 1199;Rua de Joao das Regras;False;30,3M,600;bus
 1200;Rua do Paraiso;False;;
 1206;Rua de Antero de Quental;False;30,600;bus
-1209;Rua de Goncalo Cristóvao;False;10;bus
+1209;Rua de Goncalo Cristovao;False;10;bus
 1220;Praca de Almeida Garrett;False;207,500,;bus
 1223;Praca da Batalha;False;207;bus
 1242;Largo de Sao Domingos;False;500;bus
@@ -270,7 +270,7 @@
 1566;;False;;
 1571;Rua de Carlos Alberto;False;;
 1575;Travessa da Figueiroa;False;;
-1583;Rua Doutor António Sousa Macedo;False;;
+1583;Rua Doutor Antonio Sousa Macedo;False;;
 1594;Terreiro da Se;False;;
 1606;;False;;
 1610;Rua da Laje;False;;
@@ -284,13 +284,13 @@
 1660;Rua do Doutor Alfredo de Magalhaes;False;30,3M,600;bus
 1664;Rua de Sa da Bandeira;True;200,300,301;bus
 1668;Rua do Doutor Alfredo Magalhaes;False;30,3M,600;bus
-1673;Rua de Goncalo Cristóvao;False;10,;bus
+1673;Rua de Goncalo Cristovao;False;10,;bus
 1675;Rua da Madeira;True;;
 1686;;True;;
-1689;Rua Doutor António E. Magalhaes;False;;
+1689;Rua Doutor Antonio E. Magalhaes;False;;
 1690;;False;;
 1693;Travessa da Rua Formosa;False;;
-1694;Rua Bateria da Vitória;False;;
+1694;Rua Bateria da Vitoria;False;;
 1696;Rua de Rodrigues Sampaio;True;;
 1697;Rua do Infante Dom Henrique;False;EN 12;road
 1702;Rua do Infante Dom Henrique;False;500,EN 12;busroad
@@ -381,7 +381,7 @@
 2144;;True;;
 2148;;True;;
 2155;Rua de Sao Luis;True;;
-2162;Largo dos Lóios;False;500;bus
+2162;Largo dos Loios;False;500;bus
 2169;Rua de Mouzinho da Silveira;True;500,;bus
 2173;;False;;
 2180;;False;;
@@ -475,7 +475,7 @@
 2427;Avenida dos Aliados;False;30,3M,3M,600;bus
 2437;Rua de Camoes;False;;
 2438;Rua de Camoes;False;3M;bus
-2442;Rua de Goncalo Cristóvao;False;10,3M;bus
+2442;Rua de Goncalo Cristovao;False;10,3M;bus
 2453;Rua de Joao das Regras;False;30,600;bus
 2454;Rua Formosa;False;301;bus
 2457;Rua de Sa da Bandeira;True;200,300;bus

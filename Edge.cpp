@@ -5,7 +5,7 @@
 #define BUS_V 14.24
 #define WALK_V 5.0
 #define TRAIN_V 40.0
-#define AVRG_WAITING_TIME 5
+#define AVRG_WAITING_TIME 2
 
 using namespace std;
 
@@ -54,4 +54,12 @@ Info Edge::getInfo()
 void Edge::setWeight(double w)
 {
 	weight = w;
+}
+
+double Edge::getPrice()
+{
+	if (this->getInfo().is_busStation() || this->getInfo().is_trainStation())
+		return (getTime() / 60) * 1.20;
+	else
+		return 0;
 }

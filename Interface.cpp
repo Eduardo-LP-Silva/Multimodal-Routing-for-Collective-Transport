@@ -9,6 +9,7 @@ Interface::Interface()
 	origin = NULL;
 	dest = NULL;
 	limit = 1000;
+	test = false;
 }
 
 void Interface::graphMenu()
@@ -33,11 +34,14 @@ void Interface::graphMenu()
 	switch (opt)
 	{
 	case 1:
+		test = false;
 		createExpGraph();
 		break;
 
 	case 2:
+		test = true;
 		createTestGraph();
+		graph.setTest(true);
 		break;
 
 	default:
@@ -79,12 +83,12 @@ void Interface::RouteMenu()
 				findPointMenu(origin);
 
 				if (origin == NULL)
-					return;
+					continue;
 
 				findPointMenu(dest);
 
 				if (dest == NULL)
-					return;
+					continue;
 
 				quickestVsShortestMenu();
 
@@ -234,7 +238,10 @@ void Interface::CalcRouteMenu()
 				else
 					graph.dijkstraShortestTime(origin->getId(), favTransport, limit);
 
-				showPath(graph.getPath(origin->getId(), dest->getId()), gv);
+				if(test)
+					showPath(graph.getPath(origin->getId(), dest->getId()), gv, false);
+				else
+					showPath(graph.getPath(origin->getId(), dest->getId()), gv, true);
 
 			case 4:
 				break;
@@ -246,7 +253,7 @@ void Interface::CalcRouteMenu()
 void Interface::transportPreferenceMenu()
 {
 	int opt = 0;
-
+	
 	favTransport = "";
 
 	cout
@@ -317,16 +324,16 @@ void Interface::createTestGraph()
 
 	graph.setGraphViewer(gv);
 
-	GPSCoord trindadeGPS(811, 172); //1
+	GPSCoord trindadeGPS(900, 170); //1
 	GPSCoord aliadosGPS(751, 243); //2
 	GPSCoord SBentoGPS(746, 255); //3
 	GPSCoord ReitoriaGPS(750, 222); //4
 	GPSCoord ClerigosGPS(770, 240); //5
-	GPSCoord PSPGPS(810, 277); //6
-	GPSCoord rivoliGPS(830, 218); //7
-	GPSCoord CamaraGPS(799, 191); //8
+	GPSCoord PSPGPS(1000, 277); //6
+	GPSCoord rivoliGPS(1000, 218); //7
+	GPSCoord CamaraGPS(980, 191); //8
 	GPSCoord CasaGPS(789, 170); //9
-	GPSCoord CMVGPS(450,200); //10
+	GPSCoord CMVGPS(100,200); //10
 	GPSCoord gps11(450, 250);
 	GPSCoord gps12(500, 230);
 	GPSCoord gps13(550, 207);
@@ -350,16 +357,15 @@ void Interface::createTestGraph()
 	Vertex *v15 = new Vertex(gps15, 15);
 
 	Info TAL(1, "1-2", false, true); // METRO 1-2
-	Info ASB(2, "2-3", false, false); // PE 2-3
+	Info ASB(2, "2-3", false, true); // METRO 2-3
 	Info SBPSP(3, "3-6", false, true); // METRO 3-6
 	Info TREI(4, "1-4", false, false); // PE 1-4
 	Info REIRI(5, "4-7", false, false); // PE 4-7
 	Info RICAM(6, "7-8", false, false); // PE 7-8
-	Info CAMPSP(7, "8-6", false, false); // PE 8-6
 	Info REISB(8, "4-3", true, false); // BUS 4-3
-	Info RISB(9, "7-3", true, false); // BUS 7-3
+	Info RISB(9, "7-6", true, false); // BUS 7-6
 	Info SBCAM(10, "3-8", true, false); // BUS 3-8
-	Info ALCA(11, "2-9", false, false); // PE 2-9
+	Info ALCA(11, "9-15", false, false); // PE 9-15
 	Info CACLE(12, "9-5", true, false); // BUS 9-5
 	Info SBCLE(13, "3-5", false, false); // PE 3-5
 	Info CLEPSP(14, "5-6", false, false); // PE 5-6
@@ -367,7 +373,7 @@ void Interface::createTestGraph()
 	Info CMV(16, "CMV-3", false, true); // METRO CMV-3
 	Info i17(17, "10-11", false, false); //PE 10-11
 	Info i18(18, "11-12", true, false); //BUS 11-12
-	Info i19(19, "12-13", false, false); //PE 12-13
+	Info i19(19, "12-13", true, false); //BUS 12-13
 	Info i20(20, "13-14", false, false); //PE 13-14
 	Info i21(21, "14-15", false, false); //PE 14-15
 	Info i22(22, "15-4", false, false); //PE 15-4
@@ -391,28 +397,18 @@ void Interface::createTestGraph()
 	graph.addVertex(v14);
 	graph.addVertex(v15);
 	
-	/*
-	gv->addNode(v1->getId(), 811, 172);
-	gv->addNode(v2->getId(), 751, 243);
-	gv->addNode(v3->getId(), 746, 255);
-	gv->addNode(v4->getId(), 750, 222);
-	gv->addNode(v5->getId(), 770, 240);
-	gv->addNode(v6->getId(), 810, 277);
-	gv->addNode(v7->getId(), 830, 218);
-	gv->addNode(v8->getId(), 799, 200);
-	gv->addNode(v9->getId(), 789, 82);*/
-
 	for(Vertex *v: graph.getVertexSet())
 	for (unsigned int i = 1; i < graph.getVertexSet().size(); i++)
 	{
-		gv->addNode(v->getId(), v->getCoords().getLatitude() - 500, v->getCoords().getLongitude());
+		gv->addNode(v->getId(), (int) (v->getCoords().getLatitude() - 500), (int) v->getCoords().getLongitude());
 		gv->setVertexSize(v->getId(), 20);
 		gv->setVertexLabel(v->getId(), to_string(v->getId()));
 	}
 
 	graph.addEdge(v1->getId(), v2->getId(), TAL, calcDistanceSimplified(trindadeGPS, aliadosGPS)); // 1-2
+	graph.addEdge(v2->getId(), v1->getId(), TAL, calcDistanceSimplified(trindadeGPS, aliadosGPS));
 
-	gv->addEdge(TAL.getID(), v1->getId(), v2->getId(), EdgeType::DIRECTED);
+	gv->addEdge(TAL.getID(), v1->getId(), v2->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(TAL.getID(), 3);
 	gv->setEdgeColor(TAL.getID(), GREEN);
 
@@ -425,15 +421,16 @@ void Interface::createTestGraph()
 
 
 	graph.addEdge(v2->getId(), v3->getId(), ASB, calcDistanceSimplified(aliadosGPS, SBentoGPS));  // 2-3
+	graph.addEdge(v3->getId(), v2->getId(), ASB, calcDistanceSimplified(aliadosGPS, SBentoGPS));
 
-	gv->addEdge(ASB.getID(), v2->getId(), v3->getId(), EdgeType::DIRECTED);
+	gv->addEdge(ASB.getID(), v2->getId(), v3->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(ASB.getID(), 3);
-	gv->setEdgeColor(ASB.getID(), RED);
+	gv->setEdgeColor(ASB.getID(), GREEN);
 
-	graph.addEdge(v2->getId(), v9->getId(), ALCA, calcDistanceSimplified(aliadosGPS, CasaGPS)); // 2 -9
-	graph.addEdge(v9->getId(), v2->getId(), ALCA, calcDistanceSimplified(aliadosGPS, CasaGPS)); // 9-2
+	graph.addEdge(v15->getId(), v9->getId(), ALCA, calcDistanceSimplified(aliadosGPS, CasaGPS)); // 2 -9
+	graph.addEdge(v9->getId(), v15->getId(), ALCA, calcDistanceSimplified(aliadosGPS, CasaGPS)); 
 
-	gv->addEdge(ALCA.getID(), v2->getId(), v9->getId(), EdgeType::UNDIRECTED);
+	gv->addEdge(ALCA.getID(), v15->getId(), v9->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(ALCA.getID(), 3);
 	gv->setEdgeColor(ALCA.getID(), RED);
 
@@ -445,8 +442,9 @@ void Interface::createTestGraph()
 	gv->setEdgeColor(SBCLE.getID(), RED);
 
 	graph.addEdge(v3->getId(), v6->getId(), SBPSP, calcDistanceSimplified(SBentoGPS, PSPGPS)); // 3-6
+	graph.addEdge(v6->getId(), v3->getId(), SBPSP, calcDistanceSimplified(SBentoGPS, PSPGPS));
 
-	gv->addEdge(SBPSP.getID(), v3->getId(), v6->getId(), EdgeType::DIRECTED);
+	gv->addEdge(SBPSP.getID(), v3->getId(), v6->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(SBPSP.getID(), 3);
 	gv->setEdgeColor(SBPSP.getID(), GREEN);
 
@@ -484,16 +482,9 @@ void Interface::createTestGraph()
 	gv->setEdgeThickness(RICAM.getID(), 3);
 	gv->setEdgeColor(RICAM.getID(), RED);
 
-	graph.addEdge(v8->getId(), v6->getId(), CAMPSP, calcDistanceSimplified(CamaraGPS, PSPGPS)); // 8-6
-	graph.addEdge(v6->getId(), v8->getId(), CAMPSP, calcDistanceSimplified(CamaraGPS, PSPGPS)); // 6-8
+	graph.addEdge(v7->getId(), v6->getId(), RISB, calcDistanceSimplified(rivoliGPS, PSPGPS)); // 7-6
 
-	gv->addEdge(CAMPSP.getID(), v7->getId(), v8->getId(), EdgeType::UNDIRECTED);
-	gv->setEdgeThickness(CAMPSP.getID(), 3);
-	gv->setEdgeColor(CAMPSP.getID(), RED);
-
-	graph.addEdge(v7->getId(), v3->getId(), RISB, calcDistanceSimplified(rivoliGPS, SBentoGPS)); // 7-3
-
-	gv->addEdge(RISB.getID(), v7->getId(), v3->getId(), EdgeType::DIRECTED);
+	gv->addEdge(RISB.getID(), v7->getId(), v6->getId(), EdgeType::DIRECTED);
 	gv->setEdgeThickness(RISB.getID(), 3);
 	gv->setEdgeColor(RISB.getID(), BLUE);
 
@@ -504,7 +495,7 @@ void Interface::createTestGraph()
 	gv->setEdgeThickness(TRIMCAM.getID(), 3);
 	gv->setEdgeColor(TRIMCAM.getID(), RED);
 
-	graph.addEdge(v10->getId(), v3->getId(), CMV, calcDistanceSimplified(CMVGPS, SBentoGPS));  // CMV-3
+	graph.addEdge(v10->getId(), v3->getId(), CMV, calcDistanceSimplified(CMVGPS, SBentoGPS));  // 10-3
 	graph.addEdge(v3->getId(), v10->getId(), CMV, calcDistanceSimplified(CMVGPS, SBentoGPS));
 
 	gv->addEdge(CMV.getID(), v10->getId(), v3->getId(), EdgeType::UNDIRECTED);
@@ -530,7 +521,7 @@ void Interface::createTestGraph()
 
 	gv->addEdge(i19.getID(), v12->getId(), v13->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(i19.getID(), 3);
-	gv->setEdgeColor(i19.getID(), RED);
+	gv->setEdgeColor(i19.getID(), BLUE);
 
 	graph.addEdge(v13->getId(), v14->getId(), i20, calcDistanceSimplified(gps13, gps14)); //13-14
 	graph.addEdge(v14->getId(), v13->getId(), i20, calcDistanceSimplified(gps13, gps14));

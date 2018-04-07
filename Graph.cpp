@@ -2,7 +2,10 @@
 
 using namespace std;
 
-Graph::Graph(){}
+Graph::Graph()
+{
+	test = false;
+}
 
 int Graph::getNumVertex() const
 {
@@ -146,22 +149,28 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 	double walk_penalty = 0;
 	double time_passed = 0;
 	double distance_to_add = 0;
-
+	
 	for (unsigned int i = 0; i < vertexSet.size(); i++)
 	{
 		if (vertexSet.at(i)->getId() == IDorigin)
 		{
 			vertexSet.at(i)->setDist(0);
+			vertexSet.at(i)->setTime(0);
 			qe.insert(vertexSet.at(i));
 			gv->setVertexColor(IDorigin, BLUE);
 		}
 		else
 			{
 				vertexSet.at(i)->setDist(INF);
+				vertexSet.at(i)->setTime(0);
 				gv->setVertexColor(vertexSet.at(i)->getId(), YELLOW);
 			}
 			
 		vertexSet.at(i)->setPath(NULL);
+		vertexSet.at(i)->setCost(0);
+
+		if(!test)
+			gv->setVertexSize(vertexSet.at(i)->getId(), 5);
 	}
 
 	while (!qe.empty())
@@ -176,10 +185,22 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 
 			if (!e.getInfo().is_busStation() && !e.getInfo().is_trainStation())
 			{
-				walk_penalty = e.getWeight() / 3;
+				walk_penalty = e.getWeight() / 2;
 				distance_to_add += walk_penalty;
 			}
-			
+			else
+				if (v2->isLimitReached())
+				{
+					e.getDest()->setLimitReached(true);
+					continue;
+				}
+				else
+					if(!v2->isCounting())
+					{
+						v2->setCounting(true);
+						v2->setTime(0);
+						v2->setCost(v2->getCost() + 1.20);
+					}
 
 			if (ft != "")
 				if (e.getInfo().is_busStation() && ft == "Bus")
@@ -188,10 +209,28 @@ void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double li
 					if(e.getInfo().is_trainStation() && ft == "Train")
 						distance_to_add /= 2;
 
+			if (v2->getCost() > limit)
+				if(!v2->isLimitReached())
+				{
+					v2->setCost(0);
+					v2->setCounting(false);
+					v2->setLimitReached(true);
+					e.getDest()->setLimitReached(true);
+					continue;
+				}
+
 			if (e.getDest()->getDist() > v2->getDist() + distance_to_add)
 			{
-				/*time_passed += e.getTime();
-				limit -= (e.getTime() + time_passed) / 60 * 1.20;*/
+				if (v2->isCounting())
+					if ((v2->getTime() + e.getTime()) / 60 > 1)
+						v2->setCounting(false);
+					else
+					{
+						e.getDest()->setTime(v2->getTime() + e.getTime());
+						e.getDest()->setCounting(true);
+					}
+
+				e.getDest()->setTime(v2->getTime() + e.getTime());
 				e.getDest()->setDist(v2->getDist() + distance_to_add);
 				e.getDest()->setPath(v2);
 
@@ -239,7 +278,7 @@ void Graph::dijkstraShortestTime(const int &IDorigin, const string ft, double li
 
 				if (!e.getDest()->isProcessing())
 				{
-					e.getDest()->setProcessing(true);
+					e.getDest()->setProcessing(true); 
 					qe.insert(e.getDest());
  				}
 				else
@@ -265,4 +304,14 @@ vector<Vertex*> Graph::getPath(const int &IDorigin, const int &IDdest) const
 	}
 
 	return res;
+}
+
+void Graph::setTest(bool t)
+{
+	test = t;
+}
+
+bool Graph::isTest() const
+{
+	return test;
 }

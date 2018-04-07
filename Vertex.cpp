@@ -87,3 +87,33 @@ double Vertex::getTime() const
 {
 	return time;
 }
+
+double Vertex::getCost() const
+{
+	return cost;
+}
+
+void Vertex::setCost(double c)
+{
+	cost = c;
+}
+
+bool Vertex::isCounting() const
+{
+	return counting;
+}
+
+void Vertex::setCounting(bool c)
+{
+	counting = c;
+}
+
+void Vertex::setLimitReached(bool lr)
+{
+	limitReached = lr;
+}
+
+bool Vertex::isLimitReached() const
+{
+	return limitReached;
+}

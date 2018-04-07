@@ -23,6 +23,7 @@ public:
 	Info getInfo();
 	void setInfo(Info i);
 	void setWeight(double w);
+	double getPrice();
 	
 };
 

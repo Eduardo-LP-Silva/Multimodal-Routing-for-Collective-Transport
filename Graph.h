@@ -21,6 +21,7 @@ private:
 
 	vector<Vertex *> vertexSet;    // vertex set
 	GraphViewer *gv;
+	bool test;
 
 public:
 
@@ -32,6 +33,8 @@ public:
 	bool addVertex(Vertex *v);
 	bool addEdge(const int &IDsourc, const int &IDdest, Info I, double w);
 	bool addEdgeDIS(const int &IDsourc, const int &IDdest, double w);
+	bool isTest() const;
+	void setTest(bool t);
 	int getNumVertex() const;
 	vector<Vertex *> getVertexSet() const;
 	void dijkstraShortestPathOriginal(const int &IDorigin);

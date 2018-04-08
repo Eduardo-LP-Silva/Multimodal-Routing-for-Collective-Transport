@@ -55,7 +55,6 @@ void Interface::RouteMenu()
 {
 	int opt = 0;
 
-	//system("cls");
 	origin = NULL;
 	dest = NULL;
 	favTransport = "";
@@ -221,6 +220,13 @@ void Interface::CalcRouteMenu()
 				break;
 
 			case 2:
+
+				if (!shortest)
+				{
+					cout << "Spending Limits aren't available when choosing quickest path.\n";
+					break;
+				}
+
 				cin >> limit;
 
 				if (limit < 0)
@@ -325,7 +331,7 @@ void Interface::createTestGraph()
 	graph.setGraphViewer(gv);
 
 	GPSCoord trindadeGPS(900, 170); //1
-	GPSCoord aliadosGPS(751, 243); //2
+	GPSCoord aliadosGPS(760, 230); //2
 	GPSCoord SBentoGPS(746, 255); //3
 	GPSCoord ReitoriaGPS(750, 222); //4
 	GPSCoord ClerigosGPS(770, 240); //5
@@ -356,29 +362,29 @@ void Interface::createTestGraph()
 	Vertex *v14 = new Vertex(gps14, 14);
 	Vertex *v15 = new Vertex(gps15, 15);
 
-	Info TAL(1, "1-2", false, true); // METRO 1-2
-	Info ASB(2, "2-3", false, true); // METRO 2-3
-	Info SBPSP(3, "3-6", false, true); // METRO 3-6
-	Info TREI(4, "1-4", false, false); // PE 1-4
-	Info REIRI(5, "4-7", false, false); // PE 4-7
-	Info RICAM(6, "7-8", false, false); // PE 7-8
-	Info REISB(8, "4-3", true, false); // BUS 4-3
-	Info RISB(9, "7-6", true, false); // BUS 7-6
-	Info SBCAM(10, "3-8", true, false); // BUS 3-8
-	Info ALCA(11, "9-15", false, false); // PE 9-15
-	Info CACLE(12, "9-5", true, false); // BUS 9-5
-	Info SBCLE(13, "3-5", false, false); // PE 3-5
-	Info CLEPSP(14, "5-6", false, false); // PE 5-6
-	Info TRIMCAM(15, "1-8", false, false); // PE 1-8
-	Info CMV(16, "CMV-3", false, true); // METRO CMV-3
-	Info i17(17, "10-11", false, false); //PE 10-11
-	Info i18(18, "11-12", true, false); //BUS 11-12
-	Info i19(19, "12-13", true, false); //BUS 12-13
-	Info i20(20, "13-14", false, false); //PE 13-14
-	Info i21(21, "14-15", false, false); //PE 14-15
-	Info i22(22, "15-4", false, false); //PE 15-4
-	Info i23(23, "10-13", false, false); //PE 10-13
-	Info i24(24, "1-9", false, false); //PE 1-9
+	Info TAL(1, "Edge between 1 and 2", false, true); // METRO 1-2
+	Info ASB(2, "Edge between 2 and 3", false, true); // METRO 2-3
+	Info SBPSP(3, "Edge between 3 and 6", false, true); // METRO 3-6
+	Info TREI(4, "Edge between 1 and 4", false, false); // PE 1-4
+	Info REIRI(5, "Edge between 4 and 7", false, false); // PE 4-7
+	Info RICAM(6, "Edge between 7 and 8", false, false); // PE 7-8
+	Info REISB(8, "Edge between 4 and 3", true, false); // BUS 4-3
+	Info RISB(9, "Edge between 7 and 6", true, false); // BUS 7-6
+	Info SBCAM(10, "Edge between 3 and 8", true, false); // BUS 3-8
+	Info ALCA(11, "Edge between 9 and 15", false, false); // PE 9-15
+	Info CACLE(12, "Edge between 9 and 5", true, false); // BUS 9-5
+	Info SBCLE(13, "Edge between 3 and 5", false, false); // PE 3-5
+	Info CLEPSP(14, "Edge between 5 and 6", false, false); // PE 5-6
+	Info TRIMCAM(15, "Edge between 1 and 8", false, false); // PE 1-8
+	Info CMV(16, "Edge between 10 and 3", false, true); // METRO CMV-3
+	Info i17(17, "Edge between 10 and 11", false, false); //PE 10-11
+	Info i18(18, "Edge between 11 and 12", true, false); //BUS 11-12
+	Info i19(19, "Edge between 12 and 13", true, false); //BUS 12-13
+	Info i20(20, "Edge between 13 and 14", false, false); //PE 13-14
+	Info i21(21, "Edge between 14 and 15", false, false); //PE 14-15
+	Info i22(22, "Edge between 15 and 4", false, false); //PE 15-4
+	Info i23(23, "Edge between 10 and 13", false, false); //PE 10-13
+	Info i24(24, "Edge between 1 and 9", false, false); //PE 1-9
 
 
 	graph.addVertex(v1);
@@ -557,7 +563,6 @@ void Interface::createTestGraph()
 	gv->addEdge(i24.getID(), v1->getId(), v9->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(i24.getID(), 3);
 	gv->setEdgeColor(i24.getID(), RED);
-
-
-
 }
+
+

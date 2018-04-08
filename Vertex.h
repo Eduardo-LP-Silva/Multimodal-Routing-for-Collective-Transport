@@ -20,6 +20,7 @@ private:
 	bool processing = false;
 	bool counting = false;
 	bool limitReached = false;
+	bool conectionToTrain = false;
 	double time;
 	double cost;
 	double time_count;
@@ -40,6 +41,7 @@ public:
 	bool isCounting() const;
 	bool isLimitReached() const;
 	double getTimeCount() const;
+	bool isConectedToTrain() const;
 	void setDist(double d);
 	void setPath(Vertex *v);
 	void setProcessing(bool p);
@@ -49,6 +51,7 @@ public:
 	void setCounting(bool c);
 	void setLimitReached(bool lr);
 	void setTimeCount(double tc);
+	void setConectionToTrain(bool ct);
 	
 };
 

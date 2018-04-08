@@ -127,3 +127,13 @@ void Vertex::setTimeCount(double tc)
 {
 	time_count = tc;
 }
+
+bool Vertex::isConectedToTrain() const
+{
+	return conectionToTrain;
+}
+
+void Vertex::setConectionToTrain(bool ct)
+{
+	conectionToTrain = ct;
+}

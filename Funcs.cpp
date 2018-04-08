@@ -175,6 +175,17 @@ void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 
 		destID = stoi(r3l.substr(pos1_1 + 1, pos1_2 - pos1_1 - 1));
 
+		if (i->is_trainStation())
+		{
+			Vertex *v = g->findVertex(originID), *v2 = g->findVertex(destID);
+
+			if (v != NULL && v2 != NULL)
+			{
+				v->setConectionToTrain(true);
+				v2->setConectionToTrain(true);
+			}
+		}
+
 		g->addEdge(originID, destID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
 		
 		if(i->is_busStation())
@@ -205,6 +216,8 @@ void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 	r3.close();
 
 	gv->rearrange();
+
+	addStationstoGraph(g, gv, street_id1);
 }
 
 double toRad(double deg) 
@@ -238,98 +251,6 @@ double calcDistanceSimplified(GPSCoord gps1, GPSCoord gps2)
 {
 	return sqrt(pow(gps1.getLatitude() - gps2.getLatitude(), 2) + pow(gps1.getLongitude() - gps2.getLongitude(), 2)) / 1000;
 }
-
-/* TEST VERSION
-void showPath(vector<Vertex*> v)
-{
-	unsigned int i;
-
-	for (i = 0; i < v.size() - 1; i++)
-	{
-		cout << v.at(i)->getId() << endl 
-			<< "|" << endl 
-			<< "V" << endl;
-
-		for (unsigned int j = 0; j < v.at(i)->getAdj().size(); j++)
-			if (v.at(i)->getAdj().at(j).getDest()->getId() == v.at(i + 1)->getId())
-			{
-				cout << v.at(i)->getAdj().at(j).getInfo().getName() << endl
-					<< "|";
-
-				if (v.at(i)->getAdj().at(j).getInfo().is_busStation())
-					cout << " Bus";
-				else
-					if (v.at(i)->getAdj().at(j).getInfo().is_trainStation())
-						cout << "Subway";
-
-				if(v.at(i)->getAdj().at(j).getTime() >= 1)
-					cout << fixed << setprecision(0) <<  " (" << v.at(i)->getAdj().at(j).getTime() << " minutes)" << endl;
-				else
-					cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() * 60 << " seconds)" << endl;
-
-				cout << "V" << endl;
-			}
-	}
-
-	cout << v.at(i)->getId() << endl;
-}*/
-
-/* SLIGHTLY IMPROVED VERSION
-void showPath(vector<Vertex*> v)
-{
-	unsigned int i;
-	double sector_time = 0;
-	string last_sector = "", current_sector = "";
-
-	for (i = 0; i < v.size() - 1; i++)
-	{
-		cout << v.at(i)->getId() << endl
-			<< "|" << endl
-			<< "V" << endl; 
-
-		for (unsigned int j = 0; j < v.at(i)->getAdj().size(); j++)
-			if (v.at(i)->getAdj().at(j).getDest()->getId() == v.at(i + 1)->getId())
-			{
-				cout << v.at(i)->getAdj().at(j).getInfo().getName() << endl
-					<< "|";
-
-				if (v.at(i)->getAdj().at(j).getInfo().is_busStation())
-				{
-					cout << " Bus";
-					current_sector = "Bus";
-				}
-				else
-					if (v.at(i)->getAdj().at(j).getInfo().is_trainStation())
-					{
-						cout << "Subway";
-						current_sector = "Subway";
-					}
-					else
-						current_sector = "Walk";
-
-				if (current_sector != last_sector)
-				{
-					if (v.at(i)->getAdj().at(j).getTime() >= 1)
-						cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() << " minutes)" << endl;
-					else
-						cout << fixed << setprecision(0) << " (" << v.at(i)->getAdj().at(j).getTime() * 60 << " seconds)" << endl;
-
-					sector_time = v.at(i)->getAdj().at(j).getTime();
-				}
-				else
-				{
-					sector_time += v.at(i)->getAdj().at(j).getTime();
-					cout << endl;
-				}
-
-				last_sector = current_sector;
-
-				cout << "V" << endl;
-			}
-	}
-
-	cout << v.at(i)->getId() << endl;
-}*/
 
 void showPath(vector<Vertex*> v, GraphViewer *gv, bool increaseSize)
 {
@@ -387,7 +308,7 @@ void showPath(vector<Vertex*> v, GraphViewer *gv, bool increaseSize)
 	if (increaseSize)
 		gv->setVertexSize(v.at(i)->getId(), 20);
 
-	gv->setVertexColor(v.at(i)->getId(), RED);
+	gv->setVertexColor(v.at(i)->getId(), BLACK);
 
 	
 
@@ -397,6 +318,33 @@ void showPath(vector<Vertex*> v, GraphViewer *gv, bool increaseSize)
 		cout << fixed << setprecision(0) << " (" << sector_time << " minutes)" << endl;
 	else
 		cout << fixed << setprecision(0) << " (" << sector_time * 60 << " seconds)\n" << endl;
+}
+
+void addStationstoGraph(Graph *graph, GraphViewer *gv, int lastEdge)
+{
+	if (&graph == NULL || gv == NULL)
+		return;
+
+	double d;
+
+	for (Vertex *v : graph->getVertexSet())
+		if (v->isConectedToTrain())
+			for (Vertex *v2 : graph->getVertexSet())
+			if(!v2->isConectedToTrain())
+			{
+				d = calcDistance(v->getCoords(), v2->getCoords());
+
+				if(d <= 0.025)
+				{
+					graph->addEdge(v->getId(), v2->getId(), Info(lastEdge++, "Edge number" + to_string(lastEdge)), d);
+					graph->addEdge(v2->getId(), v->getId(), Info(lastEdge, "Edge number" + to_string(lastEdge)), d);
+
+					gv->setEdgeThickness(lastEdge, 3);
+					gv->addEdge(lastEdge, v->getId(), v2->getId(), EdgeType::UNDIRECTED);
+					gv->setEdgeColor(lastEdge, RED);
+				}
+
+			}
 }
 
 

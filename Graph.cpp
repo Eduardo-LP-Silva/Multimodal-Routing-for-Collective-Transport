@@ -139,7 +139,7 @@ void Graph::dijkstraShortestPathOriginal(const int &IDorigin)
 					qe.decreaseKey(e.getDest());
 			}
 		}
-	}
+	}	
 }
 
 void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double limit)
@@ -317,6 +317,19 @@ void Graph::dijkstraShortestTime(const int &IDorigin, const string ft, double li
 			}
 		}
 	}
+}
+
+void Graph::dijkstraShortestPathTest(const int &IDorigin, const string ft, double limit)
+{
+	clock_t start = clock();
+
+	dijkstraShortestPath(IDorigin, ft, limit);
+
+	clock_t end = clock();
+
+	double total_time = (double)(end - start) / CLOCKS_PER_SEC;
+
+	cout << "Time: " << total_time << endl;
 }
 
 vector<Vertex*> Graph::getPath(const int &IDorigin, const int &IDdest) const

@@ -118,7 +118,11 @@ void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 				
 				i = new Info(street_id2, "Path No " + to_string(street_id2));
 
+				if (g->findVertex(originID) == NULL || g->findVertex(destID) == NULL)
+					continue;
+
 				g->addEdge(originID, destID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
+				
 				g->addEdge(destID, originID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
 
 				gv->addEdge(street_id2, originID, destID, EdgeType::UNDIRECTED);
@@ -133,7 +137,7 @@ void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 		
 		if (r2l.at(pos1_1 + 1) == ';')
 		{
-			s_name = street_id1;
+			s_name = "Path No " + to_string(street_id1);
 			pos1_2 = pos1_1 + 1;
 			no_name = true;
 		}
@@ -185,6 +189,9 @@ void addEdges(Graph *g, string f2, string f3, GraphViewer *gv)
 				v2->setConectionToTrain(true);
 			}
 		}
+
+		if (g->findVertex(originID) == NULL || g->findVertex(destID) == NULL)
+			continue;
 
 		g->addEdge(originID, destID, *i, calcDistance(g->findVertex(originID)->getCoords(), g->findVertex(destID)->getCoords()));
 		
@@ -310,8 +317,6 @@ void showPath(vector<Vertex*> v, GraphViewer *gv, bool increaseSize)
 
 	gv->setVertexColor(v.at(i)->getId(), BLACK);
 
-	
-
 	cout << endl << "Destination";
 
 	if (sector_time >= 1)
@@ -336,8 +341,8 @@ void addStationstoGraph(Graph *graph, GraphViewer *gv, int lastEdge)
 
 				if(d <= 0.025)
 				{
-					graph->addEdge(v->getId(), v2->getId(), Info(lastEdge++, "Edge number" + to_string(lastEdge)), d);
-					graph->addEdge(v2->getId(), v->getId(), Info(lastEdge, "Edge number" + to_string(lastEdge)), d);
+					graph->addEdge(v->getId(), v2->getId(), Info(lastEdge++, "Path number" + to_string(lastEdge)), d);
+					graph->addEdge(v2->getId(), v->getId(), Info(lastEdge, "Path number" + to_string(lastEdge)), d);
 
 					gv->setEdgeThickness(lastEdge, 3);
 					gv->addEdge(lastEdge, v->getId(), v2->getId(), EdgeType::UNDIRECTED);

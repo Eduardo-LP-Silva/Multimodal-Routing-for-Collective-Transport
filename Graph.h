@@ -10,6 +10,7 @@
 #include "graphviewer.h"
 #include <cfloat>
 #include <climits> // to work on linux
+#include <ctime>
 
 using namespace std;
 
@@ -40,6 +41,7 @@ public:
 	void dijkstraShortestPathOriginal(const int &IDorigin);
 	void dijkstraShortestPath(const int &IDorigin, const string ft, double limit);
 	void dijkstraShortestTime(const int &IDorigin, const string ft, double limit);
+	void dijkstraShortestPathTest(const int &IDorigin, const string ft, double limit);
 	void setGraphViewer(GraphViewer *gv);
 	vector<Vertex*> getPath(const int &IDorigin, const int &IDdest) const;
 };

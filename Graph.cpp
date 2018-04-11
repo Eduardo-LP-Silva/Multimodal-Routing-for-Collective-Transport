@@ -100,22 +100,40 @@ void Graph::setGraphViewer(GraphViewer *gv)
 	this->gv = gv;
 }
 
-void Graph::dijkstraShortestPathOriginal(const int &IDorigin)
+void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double limit)
 {
 	MutablePriorityQueue<Vertex> qe;
 	Vertex *v2;
+	double time_passed = 0;
+	double distance_to_add = 0;
 
 	for (unsigned int i = 0; i < vertexSet.size(); i++)
 	{
 		if (vertexSet.at(i)->getId() == IDorigin)
 		{
 			vertexSet.at(i)->setDist(0);
+			vertexSet.at(i)->setTime(0);
+			vertexSet.at(i)->setTimeCount(0);
 			qe.insert(vertexSet.at(i));
+			gv->setVertexColor(IDorigin, BLUE);
+			vertexSet.at(i)->setProcessing(true);
 		}
 		else
+		{
 			vertexSet.at(i)->setDist(INF);
+			vertexSet.at(i)->setTime(INF);
+			vertexSet.at(i)->setTimeCount(0);
+			gv->setVertexColor(vertexSet.at(i)->getId(), YELLOW);
+			vertexSet.at(i)->setProcessing(false);
+		}
 
 		vertexSet.at(i)->setPath(NULL);
+		vertexSet.at(i)->setCost(0);
+		vertexSet.at(i)->setCounting(false);
+		vertexSet.at(i)->setLimitReached(false);
+
+		if (!test)
+			gv->setVertexSize(vertexSet.at(i)->getId(), 5);
 	}
 
 	while (!qe.empty())
@@ -125,9 +143,53 @@ void Graph::dijkstraShortestPathOriginal(const int &IDorigin)
 
 		for (Edge e : v2->getAdj())
 		{
-			if (e.getDest()->getDist() > v2->getDist() + e.getWeight())
+			distance_to_add = e.getWeight();
+
+			if (e.getInfo().is_busStation() || e.getInfo().is_trainStation())
+				if (v2->isLimitReached())
+				{
+					e.getDest()->setLimitReached(true);
+					continue;
+				}
+				else
+					if (!v2->isCounting())
+					{
+						v2->setCounting(true);
+						v2->setTimeCount(0);
+						v2->setCost(v2->getCost() + 1.20);
+					}
+
+			if (ft != "")
+				if (e.getInfo().is_busStation() && ft == "Bus")
+					distance_to_add /= 4;
+				else
+					if (e.getInfo().is_trainStation() && ft == "Train")
+						distance_to_add /= 4;
+
+			if (v2->getCost() > limit)
+				if (!v2->isLimitReached())
+				{
+					v2->setCost(0);
+					v2->setCounting(false);
+					v2->setLimitReached(true);
+					e.getDest()->setLimitReached(true);
+					continue;
+				}
+
+			if (e.getDest()->getDist() > v2->getDist() + distance_to_add)
 			{
-				e.getDest()->setDist(v2->getDist() + e.getWeight());
+				if (v2->isCounting())
+					if ((v2->getTimeCount() + e.getTime()) / 60 > 1)
+						v2->setCounting(false);
+					else
+					{
+						e.getDest()->setTimeCount(v2->getTimeCount() + e.getTime());
+						//e.getDest()->setCounting(true);
+					}
+
+				//e.getDest()->setTimeCount(v2->getTimeCount() + e.getTime());
+				e.getDest()->setCost(v2->getCost());
+				e.getDest()->setDist(v2->getDist() + distance_to_add);
 				e.getDest()->setPath(v2);
 
 				if (!e.getDest()->isProcessing())
@@ -139,10 +201,10 @@ void Graph::dijkstraShortestPathOriginal(const int &IDorigin)
 					qe.decreaseKey(e.getDest());
 			}
 		}
-	}	
+	}
 }
 
-void Graph::dijkstraShortestPath(const int &IDorigin, const string ft, double limit)
+void Graph::dijkstraBestPath(const int &IDorigin, const string ft, double limit)
 {
 	MutablePriorityQueue<Vertex> qe;
 	Vertex *v2;
@@ -297,10 +359,10 @@ void Graph::dijkstraShortestTime(const int &IDorigin, const string ft, double li
 			
 			if (ft != "")
 				if (e.getInfo().is_busStation() && ft == "Bus")
-					time_to_add /= 2;
+					time_to_add /= 4;
 				else
 					if (e.getInfo().is_trainStation() && ft == "Train")
-						time_to_add /= 2;
+						time_to_add /= 4;
 			
 			if (e.getDest()->getTime() > v2->getTime() + time_to_add)
 			{
@@ -319,7 +381,7 @@ void Graph::dijkstraShortestTime(const int &IDorigin, const string ft, double li
 	}
 }
 
-void Graph::dijkstraShortestPathTest(const int &IDorigin, const string ft, double limit)
+double Graph::dijkstraShortestPathTest(const int &IDorigin, const string ft, double limit)
 {
 	clock_t start = clock();
 
@@ -329,7 +391,9 @@ void Graph::dijkstraShortestPathTest(const int &IDorigin, const string ft, doubl
 
 	double total_time = (double)(end - start) / CLOCKS_PER_SEC;
 
-	cout << "Time: " << total_time << endl;
+	//cout << "Time: " << total_time << endl;
+
+	return total_time;
 }
 
 vector<Vertex*> Graph::getPath(const int &IDorigin, const int &IDdest) const
@@ -358,4 +422,30 @@ void Graph::setTest(bool t)
 bool Graph::isTest() const
 {
 	return test;
+}
+
+void Graph::deleteVertexID(const int id)
+{
+	auto v = this->findVertex(id);
+
+	for (auto vertex : this->vertexSet) 
+	{
+		auto edges = vertex->getAdj();
+
+		for (vector<Edge>::iterator it = edges.begin(); it != edges.end(); /*it++*/)
+		{
+			if (it->getDest() == v)
+				it = edges.erase(it);
+			else
+				++it;
+		}
+	}
+
+	for (vector<Vertex *>::iterator it = this->vertexSet.begin(); it != this->vertexSet.end(); /*it++*/)
+	{
+		if (*it == v)
+			it = this->vertexSet.erase(it);
+		else
+			++it;
+	}
 }

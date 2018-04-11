@@ -162,28 +162,34 @@ void Interface::quickestVsShortestMenu()
 {
 	int opt = 0;
 	shortest = false;
+	best = true;
 
 	cout
 		<< "+-------------------+\n"
 		<< "| 1 - Shortest Path |\n"
 		<< "+-------------------+\n"
-		<< "| 2 - Quickest Path |\n"
+		<< "| 2 - Best Path     |\n"
+		<< "+-------------------+\n"
+		<< "| 3 - Quickest Path |\n"
 		<< "+-------------------+\n" << endl;
 
 	cin >> opt;
 
-	InvalidInput(2, opt);
+	InvalidInput(3, opt);
 
 	switch (opt)
 	{
 	case 1:
-		shortest = true;
+		
 		break;
 
 	case 2:
+		shortest = true;
 		break;
 
 	case 3:
+		shortest = false;
+		best = false;
 		break;
 	}
 
@@ -216,12 +222,13 @@ void Interface::CalcRouteMenu()
 		switch (opt)
 		{
 			case 1:
+
 				transportPreferenceMenu();
 				break;
 
 			case 2:
 
-				if (!shortest)
+				if (!shortest && !best)
 				{
 					cout << "Spending Limits aren't available when choosing quickest path.\n";
 					break;
@@ -239,10 +246,13 @@ void Interface::CalcRouteMenu()
 
 			case 3:
 
-				if (shortest)
-					graph.dijkstraShortestPath(origin->getId(), favTransport, limit);
+				if (best)
+					graph.dijkstraBestPath(origin->getId(), favTransport, limit);
 				else
-					graph.dijkstraShortestTime(origin->getId(), favTransport, limit);
+					if(shortest)
+						graph.dijkstraShortestTime(origin->getId(), favTransport, limit);
+					else
+						graph.dijkstraShortestTime(origin->getId(), favTransport, limit);
 
 				if(test)
 					showPath(graph.getPath(origin->getId(), dest->getId()), gv, false);
@@ -385,6 +395,7 @@ void Interface::createTestGraph()
 	Info i22(22, "Edge between 15 and 4", false, false); //PE 15-4
 	Info i23(23, "Edge between 10 and 13", false, false); //PE 10-13
 	Info i24(24, "Edge between 1 and 9", false, false); //PE 1-9
+	Info i25(25, "Edge between 15 and 1", false, false); //METRO 15-1
 
 
 	graph.addVertex(v1);
@@ -563,6 +574,72 @@ void Interface::createTestGraph()
 	gv->addEdge(i24.getID(), v1->getId(), v9->getId(), EdgeType::UNDIRECTED);
 	gv->setEdgeThickness(i24.getID(), 3);
 	gv->setEdgeColor(i24.getID(), RED);
+
+	graph.addEdge(v1->getId(), v15->getId(), i25, calcDistanceSimplified(trindadeGPS, gps15)); //15-1
+	graph.addEdge(v5->getId(), v1->getId(), i25, calcDistanceSimplified(trindadeGPS, gps15));
+
+	/*
+	gv->addEdge(i25.getID(), v1->getId(), v15->getId(), EdgeType::UNDIRECTED);
+	gv->setEdgeThickness(i25.getID(), 3);
+	gv->setEdgeColor(i25.getID(), GREEN); */
+}
+
+void Interface::createSmallTestGraph()
+{
+	GPSCoord gp(2.0, 2.0);
+
+	graph = Graph();
+	test = true;
+
+	graph.addVertex(gp, 0);
+	graph.addVertex(gp, 1);
+	graph.addVertex(gp, 2);
+	graph.addVertex(gp, 3);
+	graph.addVertex(gp, 4);
+	graph.addVertex(gp, 5);
+	graph.addEdgeDIS(0, 1, 10);
+	graph.addEdgeDIS(0, 2, 20);
+	graph.addEdgeDIS(2, 3, 20);
+	graph.addEdgeDIS(2, 4, 33);
+	graph.addEdgeDIS(1, 3, 50);
+	graph.addEdgeDIS(1, 4, 10);
+	graph.addEdgeDIS(3, 4, 20);
+	graph.addEdgeDIS(3, 5, 2);
+	graph.addEdgeDIS(4, 5, 1);
+}
+
+void Interface::testGraphTimes()
+{
+	createExpGraph();
+	Graph test_graph_big = graph;
+
+	for (int j = 0; j < 20; j++) 
+	{
+		cout << "This loop \n";
+
+		if (j != 0) 
+		{
+			for (int del = j * 100; del < (j + 1) * 100; del++) 
+			{
+				test_graph_big.deleteVertexID(del);
+			}
+		}
+
+		cout << "Time for graph with ";
+		cout << test_graph_big.getNumVertex();
+
+		double average = 0;
+		int i_max = 100;
+
+		for (int i = 0; i < i_max; i++)
+		{
+			average += test_graph_big.dijkstraShortestPathTest(1, "", INF);
+		}
+
+		average = average / i_max;
+
+		cout << " vertexs, got time: " << average << "s\n";
+	}
 }
 
 

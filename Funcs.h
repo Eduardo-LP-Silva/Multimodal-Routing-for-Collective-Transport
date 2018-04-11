@@ -16,8 +16,6 @@ double calcDistance(GPSCoord gps1, GPSCoord gps2);
 double calcDistanceSimplified(GPSCoord gps1, GPSCoord gps2);
 void showPath(vector<Vertex*> v, GraphViewer *gv, bool increaseSize);
 void addStationstoGraph(Graph *graph, GraphViewer *gv, int lastEdge);
-
-
 #endif
 
 

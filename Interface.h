@@ -13,6 +13,7 @@ private:
 	Graph graph;
 	bool shortest;
 	bool test;
+	bool best;
 	double limit;
 	string favTransport;
 	Vertex *origin, *dest;
@@ -31,6 +32,8 @@ public:
 	void setGraph(Graph *g);
 	void createExpGraph();
 	void createTestGraph();
+	void createSmallTestGraph();
+	void testGraphTimes();
 };
 
 #endif

@@ -7,7 +7,9 @@ using namespace std;
 int main()
 {
 	Interface inter = Interface();
-	inter.graphMenu();
+	//inter.graphMenu();
+	inter.testGraphTimes();
+
 	
 	return 0;
 }

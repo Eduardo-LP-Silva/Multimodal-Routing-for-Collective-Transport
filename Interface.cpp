@@ -180,11 +180,12 @@ void Interface::quickestVsShortestMenu()
 	switch (opt)
 	{
 	case 1:
-		
+		shortest = true;
+		best = false;
 		break;
 
 	case 2:
-		shortest = true;
+		best = true;
 		break;
 
 	case 3:
@@ -250,7 +251,7 @@ void Interface::CalcRouteMenu()
 					graph.dijkstraBestPath(origin->getId(), favTransport, limit);
 				else
 					if(shortest)
-						graph.dijkstraShortestTime(origin->getId(), favTransport, limit);
+						graph.dijkstraShortestPath(origin->getId(), favTransport, limit);
 					else
 						graph.dijkstraShortestTime(origin->getId(), favTransport, limit);
 
@@ -575,8 +576,8 @@ void Interface::createTestGraph()
 	gv->setEdgeThickness(i24.getID(), 3);
 	gv->setEdgeColor(i24.getID(), RED);
 
-	graph.addEdge(v1->getId(), v15->getId(), i25, calcDistanceSimplified(trindadeGPS, gps15)); //15-1
-	graph.addEdge(v5->getId(), v1->getId(), i25, calcDistanceSimplified(trindadeGPS, gps15));
+	//graph.addEdge(v1->getId(), v15->getId(), i25, calcDistanceSimplified(trindadeGPS, gps15)); //15-1
+	//graph.addEdge(v5->getId(), v1->getId(), i25, calcDistanceSimplified(trindadeGPS, gps15));
 
 	/*
 	gv->addEdge(i25.getID(), v1->getId(), v15->getId(), EdgeType::UNDIRECTED);

@@ -352,6 +352,70 @@ void addStationstoGraph(Graph *graph, GraphViewer *gv, int lastEdge)
 			}
 }
 
+int getEditingDistance(string word, string pattern)
+{
+	vector<vector<int>> D(word.length() + 1, vector<int>(pattern.length() + 1, 100));
+	int operations[3];
+	unsigned int j, i;
+
+
+	//Initialization
+
+	for (i = 0; i <= word.length(); i++)
+		D.at(i).at(0) = i;
+
+	for (j = 0; j <= pattern.length(); j++)
+		D.at(0).at(j) = j;
+
+	//Recurrence
+
+	unsigned int subs_penalty = 0, delete_penalty = 0, min = 0;
+
+	for (i = 1; i <= word.length(); i++)
+		for (j = 1; j <= pattern.length(); j++)
+			if (word.at(i - 1) == pattern.at(j - 1))
+				D.at(i).at(j) = D.at(i - 1).at(j - 1);
+			else
+			{
+				operations[0] = D.at(i - 1).at(j - 1); //Subsitution
+				operations[1] = D.at(i - 1).at(j); //Insertion
+				operations[2] = D.at(i).at(j - 1); //Elimination
+
+				min = *min_element(operations, operations + 3);
+				D.at(i).at(j) = 1 + min;
+
+				if (min == D.at(i - 1).at(j - 1))
+					subs_penalty += 10;
+				else
+					if (min == D.at(i).at(j - 1))
+						delete_penalty += 2;
+			}
+
+	//Finalization
+
+	/*
+	for (i = 0; i <= word.length(); i++)
+	{
+		for (j = 0; j <= word.length(); j++)
+			cout << D.at(i).at(j) << "|";
+
+		cout << endl;
+	} */
+
+	if (subs_penalty / 10 >= pattern.length())
+		subs_penalty *= 2;
+	else
+		if (subs_penalty / 10 < 3)
+			subs_penalty = 0;
+
+	return D[word.length()][pattern.length()] + subs_penalty + delete_penalty;
+}
+
+bool sortEdgesByED(pair<Edge, int> p1, pair<Edge, int> p2)
+{
+	return p1.second < p2.second;
+}
+
 
 
 

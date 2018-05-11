@@ -2,6 +2,7 @@
 #define INTERFACE_H
 
 #include <string>
+#include <map>
 #include "Funcs.h"
 #include "Graph.h"
 #include "Info.h"
@@ -28,6 +29,8 @@ public:
 	void transportPreferenceMenu();
 	void quickestVsShortestMenu();
 	void findPointMenu(Vertex *&v);
+	void searchMenu(Vertex *&v);
+	void listAproximateNames(Vertex *&v, string word);
 	void setGraphViewer(GraphViewer *gv);
 	void setGraph(Graph *g);
 	void createExpGraph();

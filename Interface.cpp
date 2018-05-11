@@ -128,10 +128,7 @@ void Interface::findPointMenu(Vertex* &v)
 	{
 		case 1:
 
-			cin.clear();
-			cin.ignore(1000, '\n');
-			getline(cin, ori);
-			v = graph.findVertexByEdge(ori);
+			searchMenu(v);
 
 			if (v == NULL)
 			{
@@ -156,6 +153,69 @@ void Interface::findPointMenu(Vertex* &v)
 		case 3:
 			break;
 	}
+}
+
+void Interface::searchMenu(Vertex* &v)
+{
+	int opt = 0;
+	string ori;
+
+	cin.clear();
+	cin.ignore(1000, '\n');
+	getline(cin, ori);
+
+	cout << "+------------------------+\n"
+		<< "| 1 - Exact Search       |\n"
+		<< "+------------------------+\n"
+		<< "| 2 - Approximate Search |\n"
+		<< "+------------------------+\n" << endl;
+
+	cin >> opt;
+
+	InvalidInput(2, opt);
+
+	switch (opt)
+	{
+		case 1:
+
+			break;
+
+		case 2:
+			listAproximateNames(v, ori);
+			break;
+
+	}
+}
+
+void Interface::listAproximateNames(Vertex* &v, string pattern)
+{
+	vector<pair<Edge, int>> edgeEditingDistances;
+	vector<Vertex*> vertexSet = graph.getVertexSet();
+	vector<string> edges_list;
+	unsigned int i;
+	int opt;
+
+	for (i = 0; i < vertexSet.size(); i++)
+		for (unsigned int j = 0; j < vertexSet.at(i)->getAdj().size(); j++)
+			if (find(edges_list.begin(), edges_list.end(), vertexSet.at(i)->getAdj().at(j).getInfo().getName()) 
+				== edges_list.end())
+			{
+				edges_list.push_back(vertexSet.at(i)->getAdj().at(j).getInfo().getName());
+
+				edgeEditingDistances.push_back(pair<Edge, int>(vertexSet.at(i)->getAdj().at(j),
+					getEditingDistance(vertexSet.at(i)->getAdj().at(j).getInfo().getName(), pattern)));
+			}
+			
+	sort(edgeEditingDistances.begin(), edgeEditingDistances.end(), sortEdgesByED);
+
+	for (i = 0; i < 5; i++)
+		cout << i + 1 << " - " << edgeEditingDistances.at(i).first.getInfo().getName() << endl;
+
+	cin >> opt;
+
+	InvalidInput(5, opt);
+
+	v = edgeEditingDistances.at(opt - 1).first.getDest();
 }
 
 void Interface::quickestVsShortestMenu()

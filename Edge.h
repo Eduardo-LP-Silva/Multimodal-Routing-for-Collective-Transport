@@ -20,10 +20,11 @@ public:
 	double getWeight() const;
 	Vertex* getDest() const;
 	double getTime() const;
-	Info getInfo();
+	Info getInfo() const;
 	void setInfo(Info i);
 	void setWeight(double w);
 	double getPrice();
+	bool operator==(const Edge &e2);
 	
 };
 

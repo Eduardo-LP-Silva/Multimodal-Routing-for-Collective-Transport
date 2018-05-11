@@ -46,7 +46,7 @@ void Edge::setInfo(Info i)
 	info = i;
 }
 
-Info Edge::getInfo()
+Info Edge::getInfo() const
 {
 	return info;
 }
@@ -62,4 +62,9 @@ double Edge::getPrice()
 		return (getTime() / 60) * 1.20;
 	else
 		return 0;
+}
+
+bool Edge::operator==(const Edge &e2)
+{
+	return this->info.getID() == e2.info.getID();
 }

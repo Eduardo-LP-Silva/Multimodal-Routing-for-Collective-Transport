@@ -177,7 +177,7 @@ void Interface::searchMenu(Vertex* &v)
 	switch (opt)
 	{
 		case 1:
-
+			KMPMatcher(v, ori);
 			break;
 
 		case 2:
@@ -208,14 +208,96 @@ void Interface::listAproximateNames(Vertex* &v, string pattern)
 			
 	sort(edgeEditingDistances.begin(), edgeEditingDistances.end(), sortEdgesByED);
 
-	for (i = 0; i < 5; i++)
+	unsigned int size = listOptions();
+
+	if (size == 0)
+		size = edgeEditingDistances.size();
+
+	for (i = 0; i < size; i++)
 		cout << i + 1 << " - " << edgeEditingDistances.at(i).first.getInfo().getName() << endl;
 
 	cin >> opt;
 
-	InvalidInput(5, opt);
+	InvalidInput(size, opt);
 
 	v = edgeEditingDistances.at(opt - 1).first.getDest();
+}
+
+void Interface::KMPMatcher(Vertex* &v, string pattern)
+{
+	vector<Edge> edgesList;
+	vector<string> edges;
+	vector<Vertex*> vertexSet = graph.getVertexSet(); // vertices do grafo
+	int m = pattern.size(), opt;
+	vector<int> process = preProcessPattern(pattern);
+
+	int q = 0;
+
+	for (unsigned int i = 0; i < vertexSet.size(); i++) //percorre o set de vertices
+	{
+		for (unsigned int j = 0; j < vertexSet.at(i)->getAdj().size(); j++) // percorre as arestas de cada vertice
+		{
+			if (find(edges.begin(), edges.end(), vertexSet.at(i)->getAdj().at(j).getInfo().getName()) != edges.end())
+				continue;
+			else
+				edges.push_back(vertexSet.at(i)->getAdj().at(j).getInfo().getName());
+
+			int edge_name_size = vertexSet.at(i)->getAdj().at(j).getInfo().getName().length();
+
+			for (int s = 1; s <= edge_name_size; s++)
+			{
+				while (q > 0 && (pattern[q] != vertexSet.at(i)->getAdj().at(j).getInfo().getName().at(s - 1)))
+				{
+					q = process[q];
+
+				}
+				if (pattern[q] == vertexSet.at(i)->getAdj().at(j).getInfo().getName().at(s - 1))
+				{
+					q++; // o proximo carater coincide
+				}
+
+				if (q == m)
+				{
+					edgesList.push_back(vertexSet.at(i)->getAdj().at(j));
+					q = process[q];
+				}
+			}
+		}
+	}
+
+	unsigned int size = listOptions();
+
+	if (size == 0)
+		size = edgesList.size();
+
+	for (unsigned int l = 0; l < size; l++)
+		cout << l + 1 << " - " << edgesList[l].getInfo().getName() << endl;
+
+	cin >> opt;
+
+	InvalidInput(size, opt);
+
+	v = edgesList.at(opt - 1).getDest();
+}
+
+unsigned int Interface::listOptions()
+{
+	int opt;
+
+	cout << "+-------------------------------+\n"
+		<< "|        Listing Options        |\n"
+		<< "+-------------------------------+\n"
+		<< "| 1 - Show all | 2 - Show Top 5 |\n"
+		<< "+--------------+----------------+\n" << endl;
+
+	cin >> opt;
+
+	InvalidInput(2, opt);
+
+	if (opt == 1)
+		return 0;
+	else
+		return 5;
 }
 
 void Interface::quickestVsShortestMenu()
@@ -272,13 +354,11 @@ void Interface::CalcRouteMenu()
 			<< "| 2 - Spending Limit        |\n"
 			<< "+---------------------------+\n"
 			<< "| 3 - Calculate             |\n"
-			<< "+---------------------------+\n"
-			<< "| 4 - Go Back               |\n"
 			<< "+---------------------------+\n" << endl;
 
 		cin >> opt;
 
-		InvalidInput(4, opt);
+		InvalidInput(3, opt);
 
 		switch (opt)
 		{
@@ -319,9 +399,6 @@ void Interface::CalcRouteMenu()
 					showPath(graph.getPath(origin->getId(), dest->getId()), gv, false);
 				else
 					showPath(graph.getPath(origin->getId(), dest->getId()), gv, true);
-
-			case 4:
-				break;
 		}
 
 	}

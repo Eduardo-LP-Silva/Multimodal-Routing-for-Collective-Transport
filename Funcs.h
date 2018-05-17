@@ -19,6 +19,7 @@ void showPath(vector<Vertex*> v, GraphViewer *gv, bool increaseSize);
 void addStationstoGraph(Graph *graph, GraphViewer *gv, int lastEdge);
 int getEditingDistance(string word, string pattern);
 bool sortEdgesByED(pair<Edge, int> p1, pair<Edge, int> p2);
+vector<int> preProcessPattern(string pattern);
 #endif
 
 

@@ -31,12 +31,14 @@ public:
 	void findPointMenu(Vertex *&v);
 	void searchMenu(Vertex *&v);
 	void listAproximateNames(Vertex *&v, string word);
+	void KMPMatcher(Vertex* &v, string pattern);
 	void setGraphViewer(GraphViewer *gv);
 	void setGraph(Graph *g);
 	void createExpGraph();
 	void createTestGraph();
 	void createSmallTestGraph();
 	void testGraphTimes();
+	unsigned int listOptions();
 };
 
 #endif

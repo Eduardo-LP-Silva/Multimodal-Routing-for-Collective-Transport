@@ -416,6 +416,30 @@ bool sortEdgesByED(pair<Edge, int> p1, pair<Edge, int> p2)
 	return p1.second < p2.second;
 }
 
+vector<int> preProcessPattern(string pattern)
+{
+	int m = pattern.length();
+	vector<int> lps(m + 1);
+	lps[1] = 0;
+	int k = 0;
+	int q = 2;
+
+	for (q; q <= m; q++) // q = 2 ???
+	{
+		while (k > 0 && (pattern[k] != pattern[q - 1]))
+		{
+			k = lps[k];
+		}
+
+		if (pattern[k] == pattern[q - 1])
+			k++;
+
+		lps[q] = k;
+	}
+
+	return lps;
+}
+
 
 
 

@@ -223,6 +223,39 @@ void Interface::listAproximateNames(Vertex* &v, string pattern)
 	v = edgeEditingDistances.at(opt - 1).first.getDest();
 }
 
+int Interface::listAproximateNames(Vertex* &v, string pattern, Graph t_graph)
+{
+	vector<pair<Edge, int>> edgeEditingDistances;
+	vector<Vertex*> vertexSet = graph.getVertexSet();
+	vector<string> edges_list;
+	unsigned int i;
+	int opt;
+
+	for (i = 0; i < vertexSet.size(); i++)
+		for (unsigned int j = 0; j < vertexSet.at(i)->getAdj().size(); j++)
+			if (find(edges_list.begin(), edges_list.end(), vertexSet.at(i)->getAdj().at(j).getInfo().getName())
+				== edges_list.end())
+			{
+				edges_list.push_back(vertexSet.at(i)->getAdj().at(j).getInfo().getName());
+
+				edgeEditingDistances.push_back(pair<Edge, int>(vertexSet.at(i)->getAdj().at(j),
+					getEditingDistance(vertexSet.at(i)->getAdj().at(j).getInfo().getName(), pattern)));
+			}
+
+	sort(edgeEditingDistances.begin(), edgeEditingDistances.end(), sortEdgesByED);
+
+	for (i = 0; i < 5; i++)
+		cout << i + 1 << " - " << edgeEditingDistances.at(i).first.getInfo().getName() << endl;
+
+	cin >> opt;
+
+	InvalidInput(5, opt);
+
+	v = edgeEditingDistances.at(opt - 1).first.getDest();
+
+	return edges_list.size();
+}
+
 void Interface::KMPMatcher(Vertex* &v, string pattern)
 {
 	vector<Edge> edgesList;
@@ -264,6 +297,9 @@ void Interface::KMPMatcher(Vertex* &v, string pattern)
 			}
 		}
 	}
+
+	if (edgesList.size() == 0)
+		return;
 
 	unsigned int size = listOptions();
 
@@ -746,6 +782,41 @@ void Interface::createSmallTestGraph()
 	graph.addEdgeDIS(4, 5, 1);
 }
 
+void Interface::testGraphTimesEdges()
+{
+	Vertex* v;
+	string pattern;
+
+	createExpGraph();
+	Graph test_graph_big = graph;
+
+	for (int j = 0; j < 20; j++)
+	{
+		if (j != 0)
+		{
+			for (int del = j * 100; del < (j + 1) * 100; del++)
+			{
+				test_graph_big.deleteVertexID(del);
+			}
+		}
+
+		cout << "Time for graph with ";
+		cout << listAproximateNames(v, pattern, test_graph_big);
+
+		double average = 0;
+		int i_max = 100;
+
+		for (int i = 0; i < i_max; i++)
+		{
+			average += test_graph_big.dijkstraShortestPathTest(1, "", INF);
+		}
+
+		average = average / i_max;
+
+		cout << " edges, got time: " << average << "s\n";
+	}
+}
+
 void Interface::testGraphTimes()
 {
 	createExpGraph();
@@ -779,5 +850,7 @@ void Interface::testGraphTimes()
 		cout << " vertexs, got time: " << average << "s\n";
 	}
 }
+
+
 
 

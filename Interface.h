@@ -31,6 +31,7 @@ public:
 	void findPointMenu(Vertex *&v);
 	void searchMenu(Vertex *&v);
 	void listAproximateNames(Vertex *&v, string word);
+	int listAproximateNames(Vertex *&v, string word, Graph t_graph);
 	void KMPMatcher(Vertex* &v, string pattern);
 	void setGraphViewer(GraphViewer *gv);
 	void setGraph(Graph *g);
@@ -38,6 +39,7 @@ public:
 	void createTestGraph();
 	void createSmallTestGraph();
 	void testGraphTimes();
+	void testGraphTimesEdges();
 	unsigned int listOptions();
 };
 

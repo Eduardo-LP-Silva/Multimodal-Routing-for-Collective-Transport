@@ -316,6 +316,72 @@ void Interface::KMPMatcher(Vertex* &v, string pattern)
 	v = edgesList.at(opt - 1).getDest();
 }
 
+
+
+int Interface::KMPMatcher(Vertex* &v, string pattern, Graph t_graph)
+{
+	vector<Edge> edgesList;
+	vector<string> edges;
+	vector<Vertex*> vertexSet = t_graph.getVertexSet(); // vertices do grafo
+	int m = pattern.size(), opt;
+	vector<int> process = preProcessPattern(pattern);
+
+	int q = 0;
+
+	for (unsigned int i = 0; i < vertexSet.size(); i++) //percorre o set de vertices
+	{
+		for (unsigned int j = 0; j < vertexSet.at(i)->getAdj().size(); j++) // percorre as arestas de cada vertice
+		{
+			if (find(edges.begin(), edges.end(), vertexSet.at(i)->getAdj().at(j).getInfo().getName()) != edges.end())
+				continue;
+			else
+				edges.push_back(vertexSet.at(i)->getAdj().at(j).getInfo().getName());
+
+			int edge_name_size = vertexSet.at(i)->getAdj().at(j).getInfo().getName().length();
+
+			for (int s = 1; s <= edge_name_size; s++)
+			{
+				while (q > 0 && (pattern[q] != vertexSet.at(i)->getAdj().at(j).getInfo().getName().at(s - 1)))
+				{
+					q = process[q];
+
+				}
+				if (pattern[q] == vertexSet.at(i)->getAdj().at(j).getInfo().getName().at(s - 1))
+				{
+					q++; // o proximo carater coincide
+				}
+
+				if (q == m)
+				{
+					edgesList.push_back(vertexSet.at(i)->getAdj().at(j));
+					q = process[q];
+				}
+			}
+		}
+	}
+
+	if (edgesList.size() == 0)
+		return edges.size();
+
+	unsigned int size = listOptions();
+
+	if (size == 0)
+		size = edgesList.size();
+
+	for (unsigned int l = 0; l < size; l++)
+		edgesList[l].getInfo().getName();
+
+	//cin >> opt;
+	opt = 2;
+
+	InvalidInput(size, opt);
+
+	v = edgesList.at(opt - 1).getDest();
+
+	return edges.size();
+}
+
+
 unsigned int Interface::listOptions()
 {
 	int opt;
@@ -782,38 +848,45 @@ void Interface::createSmallTestGraph()
 	graph.addEdgeDIS(4, 5, 1);
 }
 
-void Interface::testGraphTimesEdges()
+void Interface::testListNamesTimes()
 {
-	Vertex* v;
-	string pattern;
-
 	createExpGraph();
 	Graph test_graph_big = graph;
 
-	for (int j = 0; j < 20; j++)
+	string pattern = "Teatro Sa de Bandeira"; 
+
+	for (int j = 0; j < 10; j++)
 	{
+
 		if (j != 0)
 		{
-			for (int del = j * 100; del < (j + 1) * 100; del++)
+			for (int del = j * 270; del < (j + 1) * 270; del++)
 			{
 				test_graph_big.deleteVertexID(del);
 			}
 		}
 
-		cout << "Time for graph with ";
-		cout << listAproximateNames(v, pattern, test_graph_big);
+
+		int n_edges = this->listAproximateNames(test_graph_big.getVertexSet()[0], pattern, test_graph_big);
 
 		double average = 0;
-		int i_max = 100;
+		int i_max = 10;
 
 		for (int i = 0; i < i_max; i++)
 		{
-			average += test_graph_big.dijkstraShortestPathTest(1, "", INF);
+			clock_t start = clock();
+
+			this->listAproximateNames(test_graph_big.getVertexSet()[0], pattern, test_graph_big);
+
+			clock_t end = clock();
+
+			average += (double)(end - start) / CLOCKS_PER_SEC;
 		}
 
 		average = average / i_max;
 
-		cout << " edges, got time: " << average << "s\n";
+		cout << "Time for graph with " << n_edges << " edges and pattern \"" << pattern << "\"";
+		cout << " got time: " << average << "s\n";
 	}
 }
 
@@ -824,7 +897,6 @@ void Interface::testGraphTimes()
 
 	for (int j = 0; j < 20; j++) 
 	{
-		cout << "This loop \n";
 
 		if (j != 0) 
 		{
@@ -851,6 +923,47 @@ void Interface::testGraphTimes()
 	}
 }
 
+void Interface::testKPMTimes()
+{
+	createExpGraph();
+	Graph test_graph_big = graph;
+
+	string pattern = "Teatro Sa de Bandeira";
+
+	for (int j = 0; j < 10; j++)
+	{
+
+		if (j != 0)
+		{
+			for (int del = j * 270; del < (j + 1) * 270; del++)
+			{
+				test_graph_big.deleteVertexID(del);
+			}
+		}
+
+
+		int n_edges = this->KMPMatcher(test_graph_big.getVertexSet()[0], pattern, test_graph_big);
+
+		double average = 0;
+		int i_max = 10;
+
+		for (int i = 0; i < i_max; i++)
+		{
+			clock_t start = clock();
+
+			this->KMPMatcher(test_graph_big.getVertexSet()[0], pattern, test_graph_big);
+
+			clock_t end = clock();
+
+			average += (double)(end - start) / CLOCKS_PER_SEC;
+		}
+
+		average = average / i_max;
+
+		cout << "Time for graph with " << n_edges << " edges and pattern \"" << pattern << "\"";
+		cout << " got time: " << average << "s\n";
+	}
+}
 
 
 

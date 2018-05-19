@@ -21,7 +21,7 @@ private:
 	GraphViewer *gv;
 
 public:
-	
+
 	Interface();
 	void CalcRouteMenu();
 	void graphMenu();
@@ -39,8 +39,8 @@ public:
 	void createTestGraph();
 	void createSmallTestGraph();
 	void testGraphTimes();
-	void testGraphTimesEdges();
+	void testListNamesTimes();
+	void testKPMTimes();
+	int KMPMatcher(Vertex* &v, string pattern, Graph t_graph);
 	unsigned int listOptions();
 };
-
-#endif

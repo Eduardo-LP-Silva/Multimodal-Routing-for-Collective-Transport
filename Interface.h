@@ -44,3 +44,5 @@ public:
 	int KMPMatcher(Vertex* &v, string pattern, Graph t_graph);
 	unsigned int listOptions();
 };
+
+#endif

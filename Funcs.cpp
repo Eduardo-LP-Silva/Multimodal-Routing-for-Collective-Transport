@@ -424,7 +424,7 @@ vector<int> preProcessPattern(string pattern)
 	int k = 0;
 	int q = 2;
 
-	for (q; q <= m; q++) // q = 2 ???
+	for (q; q <= m; q++)
 	{
 		while (k > 0 && (pattern[k] != pattern[q - 1]))
 		{

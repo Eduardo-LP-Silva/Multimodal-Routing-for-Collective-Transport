@@ -299,8 +299,10 @@ void Interface::KMPMatcher(Vertex* &v, string pattern)
 	}
 
 	if (edgesList.size() == 0)
+	{
+		v = NULL;
 		return;
-
+	}
 	unsigned int size = listOptions();
 
 	if (size == 0)
@@ -315,8 +317,6 @@ void Interface::KMPMatcher(Vertex* &v, string pattern)
 
 	v = edgesList.at(opt - 1).getDest();
 }
-
-
 
 int Interface::KMPMatcher(Vertex* &v, string pattern, Graph t_graph)
 {

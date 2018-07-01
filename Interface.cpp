@@ -24,7 +24,7 @@ void Interface::graphMenu()
 		<< "+------------------------------------+\n"
 		<< "| 2 - Custom Test Graph              |\n"
 		<< "+------------------------------------+\n"
-		<< "| 3 - Go back                        |\n"
+		<< "| 3 - Exit                           |\n"
 		<< "+------------------------------------+\n" << endl;
 
 	cin >> opt;
@@ -43,6 +43,9 @@ void Interface::graphMenu()
 		createTestGraph();
 		graph.setTest(true);
 		break;
+
+	case 3:
+		return;
 
 	default:
 		break;

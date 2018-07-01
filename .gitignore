@@ -1,7 +1,7 @@
 Debug
-Collective Transport Routing
-Collective Transport Routing.vcxproj.filters
-Collective Transport Routing.vcxproj
-MultiModal Routing.vcxproj
-MultiModal Routing.vcxproj.filters
-MultiModal Routing.vcxproj.user
+
+Release
+makefile
+MultiModalRouting.vcxproj
+MultiModalRouting.vcxproj.filters
+MultiModalRouting.vcxproj.user

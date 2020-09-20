@@ -1,6 +1,6 @@
 # Multimodal-Routing-for-Collective-Transport
 
-This is a project developed in the course "Algorithm Design and Analysis" (CAL) at FEUP. It it designed to simulate a service wich provides the users with the best path from one point to another (in a city for example), taking into account various aspects such as time, distance and expenditure between different modes of transportation.
+Application designed to simulate a service wich provides the users with the best path from one point to another (in a city for example), taking into account various aspects such as time, distance and expenditure between different modes of transportation.
 
 ## Overview
 
